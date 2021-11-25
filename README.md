@@ -1,4 +1,4 @@
-# iscn_maker
+# ISCN_writer
 
 ## Purpose
 
