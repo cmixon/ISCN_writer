@@ -67,8 +67,11 @@
         let probeR = sessionStorage.getItem("probeR");    //recovers stored object as a variable for use in script
         let probeG = sessionStorage.getItem("probeG");
         let sigR = sessionStorage.getItem("sigR");
+        if (sigR == ""){sigR = "0"};                    //handle field left blank
         let sigG = sessionStorage.getItem("sigG");
+        if (sigG == ""){sigG = "0"};
         let sigF = sessionStorage.getItem("sigF");
+        if (sigF == ""){sigG = "0"};
 
         console.log(probeR);
         let sigR_arr = sigR.split(/[~-]+/);         //method to set an array for signals
