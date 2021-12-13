@@ -128,6 +128,7 @@
     var denom2P = sessionStorage.getItem("denom2");
     $('#denom2').val(denom2P);
 
+<<<<<<< HEAD
     /* var hP = sessionStorage.getItem("probeR3");
     $('#input13').val(hP);
     var iP = sessionStorage.getItem("probeG3");
@@ -142,6 +143,17 @@
     $('#num3').val(num3P);
     var denom3P = sessionStorage.getItem("denom3");
     $('#denom3').val(denom3P);
+=======
+        console.log(sessionStorage.getItem("probeR"));
+        let probeR = sessionStorage.getItem("probeR");    //recovers stored object as a variable for use in script
+        let probeG = sessionStorage.getItem("probeG");
+        let sigR = sessionStorage.getItem("sigR");
+        if (sigR == ""){sigR = "0"};                    //handle field left blank
+        let sigG = sessionStorage.getItem("sigG");
+        if (sigG == ""){sigG = "0"};
+        let sigF = sessionStorage.getItem("sigF");
+        if (sigF == ""){sigG = "0"};
+>>>>>>> 70617e5f09bea190cb16c61c7a4048bb4063ce83
 
 }
 console.log(sessionStorage.getItem("sigR3"));
