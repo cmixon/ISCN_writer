@@ -5,9 +5,14 @@ let sigR_write;
 let sigG_write;
 let sigF_write;
 let sigTR;
+let sigR_low;
 let sigR_high;
+let sigG_low;
+let sigG_high;
 let sigF_high;
 let signalValues;
+let sigR_array;
+let sig_Array;
 function someFunction(red, green, redsig, greensig, fusion){
 
     let probes = ["probeR", "probeG", "sigR", "sigG", "sigF", "sigR2", "sigG2", "sigF2", 
@@ -32,7 +37,7 @@ function someFunction(red, green, redsig, greensig, fusion){
     let sigF_arr = sigF.split(/[~-]+/);
     
     //convert arrays to number type
-    let sigR_array = sigR_arr.map(function (x) {
+    sigR_array = sigR_arr.map(function (x) {
         return parseInt(x);
     });
     
@@ -48,9 +53,9 @@ function someFunction(red, green, redsig, greensig, fusion){
     console.log(sigF_array);
     
     //set low and high signals depending on whether single integer or range
-    let sigR_low = sigR_array[0] + sigF_array[0];
-    let sigG_low = sigG_array[0] + sigF_array[0];
-    let sigF_low = sigF_array[0];
+    sigR_low = sigR_array[0] + sigF_array[0];
+    sigG_low = sigG_array[0] + sigF_array[0];
+    sigF_low = sigF_array[0];
     
     
     if (isNaN(sigR_array[1]) && isNaN(sigF_array[1])){
@@ -65,7 +70,6 @@ function someFunction(red, green, redsig, greensig, fusion){
     console.log(sigR_low);
     console.log(sigR_high);
     
-    let sigG_high;
     if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])){
         sigG_high = 0;
     } else if (isNaN(sigG_array[1])){
@@ -112,46 +116,45 @@ function someFunction(red, green, redsig, greensig, fusion){
     const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
     sig_Array.sort(function(a,b){return a-b});
     console.log(sig_Array);
-    
-   
-    
-    if (sigR_write == sigG_write){
+    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
+     
+    if (sigR_low == sigG_low && sigR_high == sigG_high){
        if (sigR_high != 0){
-        sigTR = sigR_array[0] +"~@" + sigR_array[1];
+        sigTR = sigR_array[0] +"~D" + sigR_high;
        } else {
         sigTR = sigR_array[0];
        }
     } else {
         if (sig_Array[0] != 0){
-        sigTR = sig_Array[0] + "~2" + sig_Array[1];
-        } else if (sig_Array [1] != 0){
-        sigTR = sig_Array[1] + "~3" + sig_Array[2];
+        sigTR = sig_Array[0] + "~E" + sig_Array[1];
+        } else if (sig_Array[1] != 0){
+        sigTR = sig_Array[1] + "F~" + sig_Array[2];
         } else {
         sigTR = sig_Array[2];
         }
-//location.reload();
+console.log(sigTR);
 }
 }
 
 function breakapart_RG(){
     let probeName = probeR.slice(2);
-    if (sigR_write == sigG_write){
+    if (sigR_low == sigG_low && sigR_high == sigG_high){
         if (sigF_high != 0){
-            const node = document.createTextNode("(" + probeName+ "x" + sigR_write + ")(" + probeR+ " sep1 " + probeG+ "x" + sigTR + ")") ;
+            const node = document.createTextNode("(" + probeName+ "x" + sigR_write + ")(" + probeR+ " sep1 " + probeG+ "x" + sigTR + ")A") ;
             const element= document.getElementById("ISCN");
               element.appendChild(node);
         } else {
-            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR+ " sep " + probeG + "x" + sigTR + ")") ; 
+            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR+ " sep " + probeG + "x" + sigTR + ")B") ; 
             const element= document.getElementById("ISCN");
             element.appendChild(node);
         }
    } else {
         if (sigF_high != 0){
-            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write +")(" + probeR + " con " + probeG + "x" + sigF_write + ")") ;
+            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write +")(" + probeR + " con " + probeG + "x" + sigF_write + ")C") ;
             const element= document.getElementById("ISCN");
               element.appendChild(node);	
         } else {
-            const node = document.createTextNode("(" + probeR + "x" +sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR+ " con " + probeG + "x" + sigF_write + ")");
+            const node = document.createTextNode("(" + probeR + "x" +sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR+ " con " + probeG + "x" + sigF_write + ")D");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
             }
@@ -162,7 +165,7 @@ function breakapart_RG(){
   
   function breakapart_GR(){
     let probeName = probeR.slice(2);
-    if (sigR_write == sigG_write){
+    if (sigR_low == sigG_low && sigR_high == sigG_high){
         if (sigF_high != 0){
          const node =  document.createTextNode("(" + probeName + "x" + sigR_write 
             + ")(" + probeG + " sep " + probeR + "x" + sigTR + ")");
@@ -194,11 +197,11 @@ function breakapart_RG(){
   }
   //function fusion red before green
   function dualFusion_RG(){
-      if (sigR_write == sigG_write) {
+      if (sigR_low == sigG_low && sigR_high == sigG_high) {
           if (sigF_high != 0){
               const node = document.createTextNode("(" + probeR + "," + probeG + ")x" 
               + sigR_write + "(" + probeR + " con " + probeG + "x" + sigF_write + ")");
-              const element = getElementById("ISCN");
+              const element = document.getElementById("ISCN");
               element.appendChild(node);
           } else {
               if (sigF_write == 0){
@@ -233,7 +236,7 @@ function breakapart_RG(){
   //function fusion green before red
   
   function dualFusion_GR(){
-      if (sigR_write == sigG_write) {
+      if (sigR_low == sigG_low && sigR_high == sigG_high) {
           if (sigF_high != 0){
               const node = document.createTextNode("(" + probeG + "," + probeR + ")x" + sigG_write + "(" + probeG + " con " + probeR + "x" + sigF_write + ")");
               const element= document.getElementById("ISCN");
