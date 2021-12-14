@@ -120,15 +120,15 @@ function someFunction(red, green, redsig, greensig, fusion){
      
     if (sigR_low == sigG_low && sigR_high == sigG_high){
        if (sigR_high != 0){
-        sigTR = sigR_array[0] +"~D" + sigR_high;
+        sigTR = sigR_array[0] +"~" + sigR_high;
        } else {
         sigTR = sigR_array[0];
        }
     } else {
         if (sig_Array[0] != 0){
-        sigTR = sig_Array[0] + "~E" + sig_Array[1];
+        sigTR = sig_Array[0] + "~" + sig_Array[1];
         } else if (sig_Array[1] != 0){
-        sigTR = sig_Array[1] + "F~" + sig_Array[2];
+        sigTR = sig_Array[1] + "~" + sig_Array[2];
         } else {
         sigTR = sig_Array[2];
         }
@@ -140,21 +140,21 @@ function breakapart_RG(){
     let probeName = probeR.slice(2);
     if (sigR_low == sigG_low && sigR_high == sigG_high){
         if (sigF_high != 0){
-            const node = document.createTextNode("(" + probeName+ "x" + sigR_write + ")(" + probeR+ " sep1 " + probeG+ "x" + sigTR + ")A") ;
+            const node = document.createTextNode("(" + probeName+ "x" + sigR_write + ")(" + probeR+ " sep1 " + probeG+ "x" + sigTR + ")") ;
             const element= document.getElementById("ISCN");
               element.appendChild(node);
         } else {
-            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR+ " sep " + probeG + "x" + sigTR + ")B") ; 
+            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR+ " sep " + probeG + "x" + sigTR + ")") ; 
             const element= document.getElementById("ISCN");
             element.appendChild(node);
         }
    } else {
         if (sigF_high != 0){
-            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write +")(" + probeR + " con " + probeG + "x" + sigF_write + ")C") ;
+            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write +")(" + probeR + " con " + probeG + "x" + sigF_write + ")") ;
             const element= document.getElementById("ISCN");
               element.appendChild(node);	
         } else {
-            const node = document.createTextNode("(" + probeR + "x" +sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR+ " con " + probeG + "x" + sigF_write + ")D");
+            const node = document.createTextNode("(" + probeR + "x" +sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR+ " con " + probeG + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
             }
