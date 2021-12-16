@@ -9,6 +9,7 @@ let sigR_high;
 let sigG_low;
 let sigG_high;
 let sigF_high;
+let sigF_low;
 let signalValues;
 let sigR_array;
 let sig_Array;
@@ -117,11 +118,7 @@ function someFunction(red, green, redsig, greensig, fusion){
      
     if (sigR_low == sigG_low && sigR_high == sigG_high){
        if (sigR_high != 0){
-<<<<<<< HEAD
         sigTR = sigR_array[0] +"~" + sigR_high;  //not sigR_array[1] since may be undefined
-=======
-        sigTR = sigR_array[0] +"~" + sigR_high;
->>>>>>> 3a0679a7bb949397bc25f147a6782f2e6ad4422f
        } else {
         sigTR = sigR_array[0];
        }
@@ -325,7 +322,7 @@ function doEverythingBA_GR(){
     someFunction(0,1,2,3,4);
     breakapart_GR();
     if (sessionStorage.getItem("num1") != 0){
-        element.appendChild(nuclei1);
+        element1.appendChild(nuclei1);
         } else {
             true
         }
@@ -455,3 +452,10 @@ function submit(){
        document.getElementById("Input").reset();
        document.getElementById("ISCN").innerHTML="";
    }
+
+   function copyToClipboard() {
+    var copyText = document.getElementById("ISCN").innerText;
+    navigator.clipboard.writeText(copyText);
+    console.log('Text copied');
+}
+
