@@ -1,0 +1,122 @@
+<html>
+<head>
+    <p><h2 style="text-align: center">FISH ISCN Writer</h2></p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+    <ul>
+        <li>Breakapart probes should have 5' or 3' entered before the probe name; e.g., 3'IGH</li>
+        <li>Signal ranges should be entered with a tilde (~) or dash (-)</li>
+        <li>Navigate to / in form fields with Tab button; click "Submit" button before clicking probe type button to have current data written</li>
+    </ul>
+</head>
+    <body>
+        <body>
+            <form id="Input">
+            Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input1" size="6"/>&emsp;
+            Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input12" size="6"/>&emsp;
+            Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input13" size="6"/><br>
+            Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input2" size="6" />&emsp;
+            Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input22" size="6" />&emsp;
+            Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input23" size="6" /><br>
+            Enter <span style="color:red; font-weight: bold;">R</span> signals: <input type="text" id="input3" size="4" />&emsp;
+            Enter <span style="color:red; font-weight: bold;">R</span> signals: <input type="text" id="input32" size="4" />&emsp;
+            Enter <span style="color:red; font-weight: bold;">R</span> signals: <input type="text" id="input33" size="4" /><br>
+            Enter <span style="color:green; font-weight: bold;">G</span> signals:&nbsp;<input type="text" id="input4" size="4" />&emsp;
+            Enter <span style="color:green; font-weight: bold;">G</span> signals:&nbsp;<input type="text" id="input42" size="4" />&emsp;
+            Enter <span style="color:green; font-weight: bold;">G</span> signals:&nbsp;<input type="text" id="input43" size="4" /><br>
+            Enter <span style="font-weight: bold;">F</span> signals:&nbsp;<input type="text" id="input5" size="4" />&emsp;
+            Enter <span style="font-weight: bold;">F</span> signals:&nbsp;<input type="text" id="input52" size="4" />&emsp;
+            Enter <span style="font-weight: bold;">F</span> signals:&nbsp;<input type="text" id="input53" size="4" /><br>
+        </form>
+    <button onclick="submit()">Submit</button>
+    <button onclick="reload()">Reload</button><br /><br />
+    <button onclick="write()">Write</button><br>
+    <button onclick="dualFusion_RG()">Dual fusion</button>
+    <button onclick="dualFusion_GR()">Dual fusion green before red</button><br /><br />
+    <button onclick="breakapart_RG()">Breakapart</button>
+    <button onclick="breakapart_GR()">Breakapart green before red</button>
+        <div> <p>The ISCN is</p>
+              <p id="ISCN"></p>
+        </div>
+    <button onclick="copyToClipboard()">Copy to clipboard</button>
+    </body>
+    <script>
+        /*declare all variables from input fields
+         AND set sessionStorage object before unload; will persist until overwritten or browser tab closed;
+         otherwise when window is reloaded to execute js on input the input will be erased before code is executed */
+
+         window.onbeforeunload = function () {
+            var probeR = document.getElementById("input1").value;
+            sessionStorage.setItem("probeR", probeR);
+            var probeG = document.getElementById("input2").value;
+            sessionStorage.setItem("probeG", probeG);
+            var sigR = document.getElementById("input3").value;
+            sessionStorage.setItem("sigR", sigR);
+            var sigG = document.getElementById("input4").value;
+            sessionStorage.setItem("sigG", sigG);
+            var sigF = document.getElementById("input5").value;
+            /* if (isNaN(sigF)){
+                sigF = 0;
+            } */
+            sessionStorage.setItem("sigF", sigF);
+
+            var probeR2 = document.getElementById("input12").value;
+            sessionStorage.setItem("probeR2", probeR2);
+            var probeG2 = document.getElementById("input22").value;
+            sessionStorage.setItem("probeG2", probeG2);
+            var sigR2 = document.getElementById("input32").value;
+            sessionStorage.setItem("sigR2", sigR2);
+            var sigG2 = document.getElementById("input42").value;
+            sessionStorage.setItem("sigG2", sigG2);
+            var sigF2 = document.getElementById("input52").value;
+            sessionStorage.setItem("sigF2", sigF2);
+
+            var probeR3 = document.getElementById("input13").value;
+            sessionStorage.setItem("probeR3", probeR3);
+            var probeG3 = document.getElementById("input23").value;
+            sessionStorage.setItem("probeG3", probeG3);
+            var sigR3 = document.getElementById("input33").value;
+            sessionStorage.setItem("sigR3", sigR3);
+            var sigG3 = document.getElementById("input43").value;
+            sessionStorage.setItem("sigG3", sigG3);
+            var sigF3 = document.getElementById("input53").value;
+            sessionStorage.setItem("sigF3", sigF3);
+
+        }
+        window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
+    var xP = sessionStorage.getItem("probeR");
+    $('#input1').val(xP);
+    var yP = sessionStorage.getItem("probeG");
+    $('#input2').val(yP);
+    var zP = sessionStorage.getItem("sigR");
+    $('#input3').val(zP);
+    var aP = sessionStorage.getItem("sigG");
+    $('#input4').val(aP);
+    var bP = sessionStorage.getItem("sigF");
+    $('#input5').val(bP);
+
+    var cP = sessionStorage.getItem("probeR2");
+    $('#input12').val(cP);
+    var dP = sessionStorage.getItem("probeG2");
+    $('#input22').val(dP);
+    var eP = sessionStorage.getItem("sigR2");
+    $('#input32').val(eP);
+    var fP = sessionStorage.getItem("sigG2");
+    $('#input42').val(fP);
+    var gP = sessionStorage.getItem("sigF2");
+    $('#input52').val(gP);
+
+    var hP = sessionStorage.getItem("probeR3");
+    $('#input13').val(hP);
+    var iP = sessionStorage.getItem("probeG3");
+    $('#input23').val(iP);
+    var jP = sessionStorage.getItem("sigR3");
+    $('#input33').val(jP);
+    var kP = sessionStorage.getItem("sigG3");
+    $('#input43').val(kP);
+    var lP = sessionStorage.getItem("sigF3");
+    $('#input53').val(lP);
+
+}
+   </script>
+</html>
