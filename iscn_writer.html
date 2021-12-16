@@ -17,11 +17,7 @@
         <body>
             <form id="Input">
             Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input1" size="6"/><br>
-            <!-- Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input12" size="6"/>&emsp;
-            Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input13" size="6"/><br> -->
             Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input2" size="6" /><br>
-           <!--  Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input22" size="6" />&emsp;
-            Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input23" size="6" /><br> -->
             Pattern 1 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input3" size="4" />&emsp;
             <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input4" size="4" />&emsp;
             <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input5" size="4" />&emsp;
@@ -47,7 +43,7 @@
     <button onclick="copyToClipboard()">Copy to clipboard</button>
     </body>
     <script>
-        /*declare all variables from input fields
+        /* declare all variables from input fields
          AND set sessionStorage object before unload; will persist until overwritten or browser tab closed;
          otherwise when window is reloaded to execute js on input the input will be erased before code is executed */
 
@@ -67,10 +63,6 @@
             var denom1 = document.getElementById("denom1").value;
             sessionStorage.setItem("denom1", denom1);
 
-           /*  var probeR2 = document.getElementById("input12").value;
-            sessionStorage.setItem("probeR2", probeR2);
-            var probeG2 = document.getElementById("input22").value;
-            sessionStorage.setItem("probeG2", probeG2); */
             var sigR2 = document.getElementById("input32").value;
             sessionStorage.setItem("sigR2", sigR2);
             var sigG2 = document.getElementById("input42").value;
@@ -82,10 +74,6 @@
             var denom2 = document.getElementById("denom2").value;
             sessionStorage.setItem("denom2", denom2);
 
-            /* var probeR3 = document.getElementById("input13").value;
-            sessionStorage.setItem("probeR3", probeR3);
-            var probeG3 = document.getElementById("input23").value;
-            sessionStorage.setItem("probeG3", probeG3); */
             var sigR3 = document.getElementById("input33").value;
             sessionStorage.setItem("sigR3", sigR3);
             var sigG3 = document.getElementById("input43").value;
@@ -114,10 +102,6 @@
     var denom1P = sessionStorage.getItem("denom1");
     $('#denom1').val(denom1P);
 
-    /* var cP = sessionStorage.getItem("probeR2");
-    $('#input12').val(cP);
-    var dP = sessionStorage.getItem("probeG2");
-    $('#input22').val(dP); */
     var eP = sessionStorage.getItem("sigR2");
     $('#input32').val(eP);
     var fP = sessionStorage.getItem("sigG2");
@@ -129,10 +113,6 @@
     var denom2P = sessionStorage.getItem("denom2");
     $('#denom2').val(denom2P);
 
-    /* var hP = sessionStorage.getItem("probeR3");
-    $('#input13').val(hP);
-    var iP = sessionStorage.getItem("probeG3");
-    $('#input23').val(iP); */
     var jP = sessionStorage.getItem("sigR3");
     $('#input33').val(jP);
     var kP = sessionStorage.getItem("sigG3");
@@ -145,15 +125,7 @@
     $('#denom3').val(denom3P);
 
 }
-console.log(sessionStorage.getItem("sigR3"));
-//copy to clipboard and reset functions
+//console.log(sessionStorage.getItem("sigR3"));
 
-function copyToClipboard() {
-    var copyText = document.getElementById("ISCN").innerText;
-    navigator.clipboard.writeText(copyText);
-    console.log('Text copied');
-}
-
-
-   </script>
+  </script>
 </html>
