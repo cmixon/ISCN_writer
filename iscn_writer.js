@@ -117,7 +117,11 @@ function someFunction(red, green, redsig, greensig, fusion){
      
     if (sigR_low == sigG_low && sigR_high == sigG_high){
        if (sigR_high != 0){
+<<<<<<< HEAD
         sigTR = sigR_array[0] +"~" + sigR_high;  //not sigR_array[1] since may be undefined
+=======
+        sigTR = sigR_array[0] +"~" + sigR_high;
+>>>>>>> 3a0679a7bb949397bc25f147a6782f2e6ad4422f
        } else {
         sigTR = sigR_array[0];
        }
