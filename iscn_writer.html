@@ -1,131 +1,148 @@
 <html>
+
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="./iscn_writer.js"></script>
     <title>ISCN Writer</title>
-    
+
 </head>
-    <body>
-        <p><h2 style="text-align: center">FISH ISCN Writer</h2></p>
-        <ul>
-            <li>Breakapart probes should have 5' or 3' entered before the probe name; e.g., 3'IGH</li>
-            <li>Signal ranges should be entered with a tilde (~) or dash (-)</li>
-            <li>Navigate to next field with Tab key
-            <li>Click "Submit" button before clicking a probe type button</li>
-            <li>One to three signal patterns may be entered</li>
-            <li>Order is written Pattern 1 / Pattern 2 / Pattern 3 without regard to signal counts</li>
-        </ul>
-            <form id="Input">
-            Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp;  <input type="text" id="input1" size="6"/><br>
-            Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input2" size="6" /><br>
-            Pattern 1 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input3" size="4" />&emsp;
-            <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input4" size="4" />&emsp;
-            <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input5" size="4" />&emsp;
-            <span>Nuclei:&emsp;</span><input type="text" id="num1" size="4"/> / <input type="text" id="denom1" size="4" /><br>
-            Pattern 2 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input32" size="4" />&emsp;
-            <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input42" size="4" />&emsp;
-            <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input52" size="4" />&emsp;
-            <span>Nuclei:&emsp;</span><input type="text" id="num2" size="4"/> / <input type="text" id="denom2" size="4" /><br>
-            Pattern 3 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input33" size="4" />&emsp;
-            <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input43" size="4" />&emsp;
-            <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input53" size="4" />&emsp;
-            <span>Nuclei:&emsp;</span><input type="text" id="num3" size="4"/> / <input type="text" id="denom3" size="4" /><br>
-        </form>
+
+<body>
+    <p>
+    <h2 style="text-align: center">FISH ISCN Writer</h2>
+    </p>
+    <ul>
+        <li>Breakapart probes should have 5' or 3' entered before the probe name; e.g., 3'IGH</li>
+        <li>Signal ranges should be entered with a tilde (~) or dash (-)</li>
+        <li>Navigate to next field with Tab key
+        <li>Click "Submit" button before clicking a probe type button</li>
+        <li>One to three signal patterns may be entered</li>
+        <li>Order is written Pattern 1 / Pattern 2 / Pattern 3 without regard to signal counts</li>
+    </ul>
+    <form id="Input">
+        Enter <span style="color:red; font-weight: bold;">RED</span> probe:&emsp; &ensp; <input type="text" id="input1"
+            size="6" /><br>
+        Enter <span style="color:green; font-weight: bold;">GREEN</span> probe:&ensp;<input type="text" id="input2"
+            size="6" /><br>
+        Pattern 1 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input3"
+            size="4" />&emsp;
+        <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input4"
+            size="4" />&emsp;
+        <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input5" size="4" />&emsp;
+        <span>Nuclei:&emsp;</span><input type="text" id="num1" size="4" /> / <input type="text" id="denom1"
+            size="4" /><br>
+        Pattern 2 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input32"
+            size="4" />&emsp;
+        <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input42"
+            size="4" />&emsp;
+        <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input52" size="4" />&emsp;
+        <span>Nuclei:&emsp;</span><input type="text" id="num2" size="4" /> / <input type="text" id="denom2"
+            size="4" /><br>
+        Pattern 3 <span style="color:red; font-weight: bold;">R</span> signals:&emsp; <input type="text" id="input33"
+            size="4" />&emsp;
+        <span style="color:green; font-weight: bold;">G</span> signals:&emsp;<input type="text" id="input43"
+            size="4" />&emsp;
+        <span style="font-weight: bold;">F</span> signals:&emsp;<input type="text" id="input53" size="4" />&emsp;
+        <span>Nuclei:&emsp;</span><input type="text" id="num3" size="4" /> / <input type="text" id="denom3"
+            size="4" /><br>
+    </form>
     <button onclick="submit()">Submit</button>
     <button onclick="reload()">Reset</button><br /><br />
     <button onclick="doEverythingDualFusion_RG()">Dual fusion</button>
     <button onclick="doEverythingDualFusion_GR()">Dual fusion green before red</button><br /><br />
     <button onclick="doEverythingBA_RG()">Breakapart</button>
     <button onclick="doEverythingBA_GR()">Breakapart green before red</button>
-        <div> <p>------------Results------------</p>
-              <p id="ISCN">nuc ish</p>
-        </div>
+    <div>
+        <p>------------Results------------</p>
+        <p id="ISCN" contenteditable="true">nuc ish</p>
+    </div>
     <button onclick="copyToClipboard()">Copy to clipboard</button>
-    </body>
-    <script>
-        /* declare all variables from input fields
-         AND set sessionStorage object before unload; will persist until overwritten or browser tab closed;
-         otherwise when window is reloaded to execute js on input the input will be erased before code is executed */
+</body>
+<script>
+    /* declare all variables from input fields
+     AND set sessionStorage object before unload; will persist until overwritten or browser tab closed;
+     otherwise when window is reloaded to execute js on input the input will be erased before code is executed */
 
-         window.onbeforeunload = function () {
-            var probeR = document.getElementById("input1").value;
-            sessionStorage.setItem("probeR", probeR);
-            var probeG = document.getElementById("input2").value;
-            sessionStorage.setItem("probeG", probeG);
-            var sigR = document.getElementById("input3").value;
-            sessionStorage.setItem("sigR", sigR);
-            var sigG = document.getElementById("input4").value;
-            sessionStorage.setItem("sigG", sigG);
-            var sigF = document.getElementById("input5").value;
-            sessionStorage.setItem("sigF", sigF);
-            var num1 = document.getElementById("num1").value;
-            sessionStorage.setItem("num1", num1);
-            var denom1 = document.getElementById("denom1").value;
-            sessionStorage.setItem("denom1", denom1);
+    window.onbeforeunload = function () {
+        var probeR = document.getElementById("input1").value;
+        sessionStorage.setItem("probeR", probeR);
+        var probeG = document.getElementById("input2").value;
+        sessionStorage.setItem("probeG", probeG);
+        var sigR = document.getElementById("input3").value;
+        sessionStorage.setItem("sigR", sigR);
+        var sigG = document.getElementById("input4").value;
+        sessionStorage.setItem("sigG", sigG);
+        var sigF = document.getElementById("input5").value;
+        sessionStorage.setItem("sigF", sigF);
+        var num1 = document.getElementById("num1").value;
+        sessionStorage.setItem("num1", num1);
+        var denom1 = document.getElementById("denom1").value;
+        sessionStorage.setItem("denom1", denom1);
 
-            var sigR2 = document.getElementById("input32").value;
-            sessionStorage.setItem("sigR2", sigR2);
-            var sigG2 = document.getElementById("input42").value;
-            sessionStorage.setItem("sigG2", sigG2);
-            var sigF2 = document.getElementById("input52").value;
-            sessionStorage.setItem("sigF2", sigF2);
-            var num2 = document.getElementById("num2").value;
-            sessionStorage.setItem("num2", num2);
-            var denom2 = document.getElementById("denom2").value;
-            sessionStorage.setItem("denom2", denom2);
+        var sigR2 = document.getElementById("input32").value;
+        sessionStorage.setItem("sigR2", sigR2);
+        var sigG2 = document.getElementById("input42").value;
+        sessionStorage.setItem("sigG2", sigG2);
+        var sigF2 = document.getElementById("input52").value;
+        sessionStorage.setItem("sigF2", sigF2);
+        var num2 = document.getElementById("num2").value;
+        sessionStorage.setItem("num2", num2);
+        var denom2 = document.getElementById("denom2").value;
+        sessionStorage.setItem("denom2", denom2);
 
-            var sigR3 = document.getElementById("input33").value;
-            sessionStorage.setItem("sigR3", sigR3);
-            var sigG3 = document.getElementById("input43").value;
-            sessionStorage.setItem("sigG3", sigG3);
-            var sigF3 = document.getElementById("input53").value;
-            sessionStorage.setItem("sigF3", sigF3);
-            var num3 = document.getElementById("num3").value;
-            sessionStorage.setItem("num3", num3);
-            var denom3 = document.getElementById("denom3").value;
-            sessionStorage.setItem("denom3", denom3);
+        var sigR3 = document.getElementById("input33").value;
+        sessionStorage.setItem("sigR3", sigR3);
+        var sigG3 = document.getElementById("input43").value;
+        sessionStorage.setItem("sigG3", sigG3);
+        var sigF3 = document.getElementById("input53").value;
+        sessionStorage.setItem("sigF3", sigF3);
+        var num3 = document.getElementById("num3").value;
+        sessionStorage.setItem("num3", num3);
+        var denom3 = document.getElementById("denom3").value;
+        sessionStorage.setItem("denom3", denom3);
 
-        }
-        window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
-    var xP = sessionStorage.getItem("probeR");
-    $('#input1').val(xP);
-    var yP = sessionStorage.getItem("probeG");
-    $('#input2').val(yP);
-    var zP = sessionStorage.getItem("sigR");
-    $('#input3').val(zP);
-    var aP = sessionStorage.getItem("sigG");
-    $('#input4').val(aP);
-    var bP = sessionStorage.getItem("sigF");
-    $('#input5').val(bP);
-    var num1P = sessionStorage.getItem("num1");
-    $('#num1').val(num1P);
-    var denom1P = sessionStorage.getItem("denom1");
-    $('#denom1').val(denom1P);
+    }
+    window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
+        var xP = sessionStorage.getItem("probeR");
+        $('#input1').val(xP);
+        var yP = sessionStorage.getItem("probeG");
+        $('#input2').val(yP);
+        var zP = sessionStorage.getItem("sigR");
+        $('#input3').val(zP);
+        var aP = sessionStorage.getItem("sigG");
+        $('#input4').val(aP);
+        var bP = sessionStorage.getItem("sigF");
+        $('#input5').val(bP);
+        var num1P = sessionStorage.getItem("num1");
+        $('#num1').val(num1P);
+        var denom1P = sessionStorage.getItem("denom1");
+        $('#denom1').val(denom1P);
 
-    var eP = sessionStorage.getItem("sigR2");
-    $('#input32').val(eP);
-    var fP = sessionStorage.getItem("sigG2");
-    $('#input42').val(fP);
-    var gP = sessionStorage.getItem("sigF2");
-    $('#input52').val(gP);
-    var num2P = sessionStorage.getItem("num2");
-    $('#num2').val(num2P);
-    var denom2P = sessionStorage.getItem("denom2");
-    $('#denom2').val(denom2P);
+        var eP = sessionStorage.getItem("sigR2");
+        $('#input32').val(eP);
+        var fP = sessionStorage.getItem("sigG2");
+        $('#input42').val(fP);
+        var gP = sessionStorage.getItem("sigF2");
+        $('#input52').val(gP);
+        var num2P = sessionStorage.getItem("num2");
+        $('#num2').val(num2P);
+        var denom2P = sessionStorage.getItem("denom2");
+        $('#denom2').val(denom2P);
 
-    var jP = sessionStorage.getItem("sigR3");
-    $('#input33').val(jP);
-    var kP = sessionStorage.getItem("sigG3");
-    $('#input43').val(kP);
-    var lP = sessionStorage.getItem("sigF3");
-    $('#input53').val(lP);
-    var num3P = sessionStorage.getItem("num3");
-    $('#num3').val(num3P);
-    var denom3P = sessionStorage.getItem("denom3");
-    $('#denom3').val(denom3P);
+        var jP = sessionStorage.getItem("sigR3");
+        $('#input33').val(jP);
+        var kP = sessionStorage.getItem("sigG3");
+        $('#input43').val(kP);
+        var lP = sessionStorage.getItem("sigF3");
+        $('#input53').val(lP);
+        var num3P = sessionStorage.getItem("num3");
+        $('#num3').val(num3P);
+        var denom3P = sessionStorage.getItem("denom3");
+        $('#denom3').val(denom3P);
 
-}
+    }
 //console.log(sessionStorage.getItem("sigR3"));
 
-  </script>
+</script>
+
 </html>

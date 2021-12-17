@@ -1,19 +1,24 @@
 <html>
+
 <head>
-        <title>ISCN Writer (Single)</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <title>ISCN Writer (Single)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 
 </head>
+
 <body>
-        <p><h2 style="text-align: center">FISH ISCN Writer</h2></p>
-        <ul>
-            <li>Breakapart probes should have 5' or 3' entered before the probe name; e.g., 3'IGH</li>
-            <li>Signal ranges should be entered with a tilde (~) or dash (-)</li>
-            <li>Navigate to form fields with Tab button; click "Submit" button before clicking probe type button to have current data written</li>
-            <li>Enter the actual signal pattern; fields may be left blank</li>
-        </ul>
-        <form id="Input">
-        Enter <span style="color:red;">RED</span> probe:&emsp;&ensp;  <input type="text" id="input1" size="6"/><br>
+    <p>
+    <h2 style="text-align: center">FISH ISCN Writer</h2>
+    </p>
+    <ul>
+        <li>Breakapart probes should have 5' or 3' entered before the probe name; e.g., 3'IGH</li>
+        <li>Signal ranges should be entered with a tilde (~) or dash (-)</li>
+        <li>Navigate to form fields with Tab button; click "Submit" button before clicking probe type button to have
+            current data written</li>
+        <li>Enter the actual signal pattern; fields may be left blank</li>
+    </ul>
+    <form id="Input">
+        Enter <span style="color:red;">RED</span> probe:&emsp;&ensp; <input type="text" id="input1" size="6" /><br>
         Enter <span style="color:green;">GREEN</span> probe: <input type="text" id="input2" size="6" /><br>
         Enter <span style="color:red;">R</span> signals: <input type="text" id="input3" size="4" /><br>
         Enter <span style="color:green;">G</span> signals:&nbsp;<input type="text" id="input4" size="4" /><br>
@@ -25,293 +30,297 @@
     <button onclick="dualFusion_GR()">Dual fusion green before red</button><br /><br />
     <button onclick="breakapart_RG()">Breakapart</button>
     <button onclick="breakapart_GR()">Breakapart green before red</button>
-        <div> <p>The ISCN is</p>
-              <p id="ISCN"></p>
-        </div>
+    <div>
+        <p>The ISCN is</p>
+        <p id="ISCN"></p>
+    </div>
     <button onclick="copyToClipboard()">Copy to clipboard</button>
-    </body>
-    <script>
-        /*declare all variables from input fields
-         AND to allow persistence of input data when page reloaded to run script */
-        window.onbeforeunload = function () {                       //sets sessionStorage object before unload; will persist until overwritten or browser tab closed
-            var probeR = document.getElementById("input1").value;
-            sessionStorage.setItem("probeR", probeR);
-            var probeG = document.getElementById("input2").value;
-            sessionStorage.setItem("probeG", probeG);
-            var sigR = document.getElementById("input3").value;
-            sessionStorage.setItem("sigR", sigR);
-            var sigG = document.getElementById("input4").value;
-            sessionStorage.setItem("sigG", sigG);
-            let sigF = document.getElementById("input5").value;
-            sessionStorage.setItem("sigF", sigF);
+</body>
+<script>
+    /*declare all variables from input fields
+     AND to allow persistence of input data when page reloaded to run script */
+    window.onbeforeunload = function () {                       //sets sessionStorage object before unload; will persist until overwritten or browser tab closed
+        var probeR = document.getElementById("input1").value;
+        sessionStorage.setItem("probeR", probeR);
+        var probeG = document.getElementById("input2").value;
+        sessionStorage.setItem("probeG", probeG);
+        var sigR = document.getElementById("input3").value;
+        sessionStorage.setItem("sigR", sigR);
+        var sigG = document.getElementById("input4").value;
+        sessionStorage.setItem("sigG", sigG);
+        let sigF = document.getElementById("input5").value;
+        sessionStorage.setItem("sigF", sigF);
 
-        }
+    }
 
-          window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
-            var x = sessionStorage.getItem("probeR");
-            $('#input1').val(x);
-            var y = sessionStorage.getItem("probeG");
-            $('#input2').val(y);
-            var z = sessionStorage.getItem("sigR");
-            $('#input3').val(z);
-            var a = sessionStorage.getItem("sigG");
-            $('#input4').val(a);
-            var b = sessionStorage.getItem("sigF");
-            $('#input5').val(b);
-           
-            //  document.getElementById("input1").innerText = x;  //doesn't work
-        }
-        
-        
-     
+    window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
+        var x = sessionStorage.getItem("probeR");
+        $('#input1').val(x);
+        var y = sessionStorage.getItem("probeG");
+        $('#input2').val(y);
+        var z = sessionStorage.getItem("sigR");
+        $('#input3').val(z);
+        var a = sessionStorage.getItem("sigG");
+        $('#input4').val(a);
+        var b = sessionStorage.getItem("sigF");
+        $('#input5').val(b);
 
-        console.log(sessionStorage.getItem("probeR"));
-        let probeR = sessionStorage.getItem("probeR");    //recovers stored object as a variable for use in script
-        let probeG = sessionStorage.getItem("probeG");
-        let sigR = sessionStorage.getItem("sigR");
-        if (sigR == ""){sigR="0"};
-        let sigG = sessionStorage.getItem("sigG");
-        if (sigG == ""){sigG="0"};
-        let sigF = sessionStorage.getItem("sigF");
-        if (sigF == ""){sigF="0"};
+        //  document.getElementById("input1").innerText = x;  //doesn't work
+    }
 
-        console.log(probeR);
-        let sigR_arr = sigR.split(/[~-]+/);         //method to set an array for signals
-        let sigG_arr = sigG.split(/[~-]+/);
-        let sigF_arr = sigF.split(/[~-]+/);
-        //construct arrays from signals variables and convert to number type
-        let sigR_array = sigR_arr.map(function (x) {
-            return parseInt(x);
-        });
 
-        let sigG_array = sigG_arr.map(function (x) {
-            return parseInt(x);
-        });
 
-        let sigF_array = sigF_arr.map(function (x) {
-            return parseInt(x);
-        });
-        console.log(sigR_array);
-        console.log(sigG_array);
-        console.log(sigF_array);
-        
-        //set low and high signals depending on whether single integer or range
-        let sigR_low = sigR_array[0] + sigF_array[0];
-        let sigG_low = sigG_array[0] + sigF_array[0];
-        let sigF_low = sigF_array[0];
 
-        let sigR_high;
-        if (isNaN(sigR_array[1]) && isNaN(sigF_array[1])){
-            sigR_high = 0;
-        } else if (isNaN(sigR_array[1])){
-            sigR_high = sigR_array[0] + sigF_array[1];
-        } else if (isNaN(sigF_array[1])){
-            sigR_high = sigR_array[1] + sigF_array[0];
+    console.log(sessionStorage.getItem("probeR"));
+    let probeR = sessionStorage.getItem("probeR");    //recovers stored object as a variable for use in script
+    let probeG = sessionStorage.getItem("probeG");
+    let sigR = sessionStorage.getItem("sigR");
+    if (sigR == "") { sigR = "0" };
+    let sigG = sessionStorage.getItem("sigG");
+    if (sigG == "") { sigG = "0" };
+    let sigF = sessionStorage.getItem("sigF");
+    if (sigF == "") { sigF = "0" };
+
+    console.log(probeR);
+    let sigR_arr = sigR.split(/[~-]+/);         //method to set an array for signals
+    let sigG_arr = sigG.split(/[~-]+/);
+    let sigF_arr = sigF.split(/[~-]+/);
+    //construct arrays from signals variables and convert to number type
+    let sigR_array = sigR_arr.map(function (x) {
+        return parseInt(x);
+    });
+
+    let sigG_array = sigG_arr.map(function (x) {
+        return parseInt(x);
+    });
+
+    let sigF_array = sigF_arr.map(function (x) {
+        return parseInt(x);
+    });
+    console.log(sigR_array);
+    console.log(sigG_array);
+    console.log(sigF_array);
+
+    //set low and high signals depending on whether single integer or range
+    let sigR_low = sigR_array[0] + sigF_array[0];
+    let sigG_low = sigG_array[0] + sigF_array[0];
+    let sigF_low = sigF_array[0];
+
+    let sigR_high;
+    if (isNaN(sigR_array[1]) && isNaN(sigF_array[1])) {
+        sigR_high = 0;
+    } else if (isNaN(sigR_array[1])) {
+        sigR_high = sigR_array[0] + sigF_array[1];
+    } else if (isNaN(sigF_array[1])) {
+        sigR_high = sigR_array[1] + sigF_array[0];
+    } else {
+        sigR_high = sigR_array[1] + sigF_array[1];
+    };
+    console.log(sigR_low);
+    console.log(sigR_high);
+
+    let sigG_high;
+    if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])) {
+        sigG_high = 0;
+    } else if (isNaN(sigG_array[1])) {
+        sigG_high = sigG_array[0] + sigF_array[1];
+    } else if (isNaN(sigF_array[1])) {
+        sigG_high = sigG_array[1] + sigF_array[0];
+    } else {
+        sigG_high = sigG_array[1] + sigF_array[1];
+    };
+    console.log(sigG_low);
+    console.log(sigG_high);
+
+    let sigF_high;
+    if (isNaN(sigF_array[1])) {
+        sigF_high = 0;
+    } else {
+        sigF_high = sigF_array[1];
+    }
+    console.log(sigF_high);
+
+    //set total number of signals to write (RSIG etc. in shell script)
+
+    let sigR_write;
+    let sigG_write;
+    let sigF_write;
+
+    if (sigR_high == 0) {
+        sigR_write = sigR_low;
+    } else {
+        sigR_write = sigR_low + "~" + sigR_high;
+    }
+
+    if (sigG_high == 0) {
+        sigG_write = sigG_low;
+    } else {
+        sigG_write = sigG_low + "~" + sigG_high;
+    }
+
+    if (sigF_high == 0) {
+        sigF_write = sigF_low;
+    } else {
+        sigF_write = sigF_low + "~" + sigF_high;
+    }
+    //construct array to determine number of sep signals when F=0, with ranges when needed
+
+    const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
+    sig_Array.sort(function (a, b) { return a - b });
+    console.log(sig_Array);
+
+    let sigTR;
+
+    if (sigR_write == sigG_write) {
+        if (sigR_high != 0 && sigR_array[1] != null) {
+            sigTR = sigR_array[0] + "~" + sigR_array[1];
         } else {
-            sigR_high = sigR_array[1] + sigF_array[1];
-          };
-        console.log(sigR_low);
-        console.log(sigR_high);
-        
-        let sigG_high;
-        if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])){
-            sigG_high = 0;
-        } else if (isNaN(sigG_array[1])){
-            sigG_high = sigG_array[0] + sigF_array[1];
-        } else if (isNaN(sigF_array[1])){
-            sigG_high = sigG_array[1] + sigF_array[0];
-        } else {
-            sigG_high = sigG_array[1] + sigF_array[1];
-          };
-        console.log(sigG_low);
-        console.log(sigG_high);
-
-        let sigF_high;
-        if (isNaN(sigF_array[1])){
-            sigF_high = 0;
-        } else {
-            sigF_high = sigF_array[1];
-        }
-        console.log(sigF_high);
-
-        //set total number of signals to write (RSIG etc. in shell script)
-
-        let sigR_write; 
-        let sigG_write;
-        let sigF_write;
-
-        if (sigR_high == 0){
-            sigR_write = sigR_low;
-        } else {
-            sigR_write = sigR_low + "~" + sigR_high;
-        }
-
-        if (sigG_high == 0){
-            sigG_write = sigG_low;
-        } else {
-            sigG_write = sigG_low + "~" + sigG_high;
-        }
-        
-        if (sigF_high == 0){
-            sigF_write = sigF_low;
-        } else {
-            sigF_write = sigF_low + "~" + sigF_high;
-        }
-        //construct array to determine number of sep signals when F=0, with ranges when needed
-
-        const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
-        sig_Array.sort(function(a,b){return a-b});
-        console.log(sig_Array);
-
-        let sigTR;
-
-        if (sigR_write == sigG_write){
-           if (sigR_high != 0 && sigR_array[1] != null ){
-            sigTR = sigR_array[0] +"~" + sigR_array[1];
-           } else {
             sigTR = sigR_array[0];
-           }
-        } else {
-            if (sig_Array[0] != 0){
+        }
+    } else {
+        if (sig_Array[0] != 0) {
             sigTR = sig_Array[0] + "~" + sig_Array[1];
-            } else if (sig_Array [1] != 0){
+        } else if (sig_Array[1] != 0) {
             sigTR = sig_Array[1] + "~" + sig_Array[2];
-            } else {
+        } else {
             sigTR = sig_Array[2];
+        }
+    }
+
+
+    // for breakapart probes, get probe name
+
+    let probeName = probeR.slice(2);
+    console.log(probeName);
+
+    //function breakapart red before green
+    function breakapart_RG() {
+        if (sigR_write == sigG_write) {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeName + "x" + sigR_write
+                    + ")(" + probeR.fontcolor("red") + " sep " + probeG.fontcolor("green") + "x" + sigTR + ")";
+            } else {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeName + "x" + sigR_write
+                    + ")(" + probeR.fontcolor("red") + " sep " + probeG.fontcolor("green") + "x" + sigTR + ")";
             }
-        } 
-
-        
-        // for breakapart probes, get probe name
-
-        let probeName = probeR.slice(2);
-        console.log(probeName);
-
-        //function breakapart red before green
-      function breakapart_RG(){
-      	if (sigR_write == sigG_write){
-      		if (sigF_high != 0){
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
-      			+ ")(" + probeR.fontcolor("red") + " sep " + probeG.fontcolor("green") + "x" + sigTR + ")" ;
-      		} else {
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
-      			+ ")(" + probeR.fontcolor("red") + " sep " + probeG.fontcolor("green") + "x" + sigTR + ")" ; }
-         } else {
-      		if (sigF_high != 0){
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write 
-      			+ "," + probeG.fontcolor("green") + "x" + sigG_write +")(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")" ;	
-      		} else {
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeR.fontcolor("red") + "x" +sigR_write 
-      			+ "," + probeG.fontcolor("green") + "x" + sigG_write + ")(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")" ;
-      			}
-      		}
+        } else {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write
+                    + "," + probeG.fontcolor("green") + "x" + sigG_write + ")(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";
+            } else {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write
+                    + "," + probeG.fontcolor("green") + "x" + sigG_write + ")(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";
+            }
         }
-    
-        //function breakapart green before red
+    }
 
-        function breakapart_GR(){
-      	if (sigR_write == sigG_write){
-      		if (sigF_high != 0){
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
-      			+ ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")" ;
-      		} else {
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
-      			+ ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")" ; }
-               /*    document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
-      			+ ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x0)"; } */
-         } else {
-      		if (sigF_high != 0){
-      			document.getElementById("ISCN").innerHTML="nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write 
-      			+ "," + probeR.fontcolor("red") + "x" + sigR_write +")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")" ;	
-      		} else {
-      			/* document.getElementById("ISCN").innerHTML="nuc ish(" + probeG.fontcolor("green") + "x" +sigG_write 
-      			+ "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")" ; */
-                  document.getElementById("ISCN").innerHTML="nuc ish(" + probeG.fontcolor("green") + "x" +sigG_write 
-      			+ "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write +")" ;
-      			}
-      		}
+    //function breakapart green before red
+
+    function breakapart_GR() {
+        if (sigR_write == sigG_write) {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeName + "x" + sigR_write
+                    + ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")";
+            } else {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeName + "x" + sigR_write
+                    + ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")";
+            }
+            /*    document.getElementById("ISCN").innerHTML="nuc ish(" + probeName + "x" + sigR_write 
+                 + ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x0)"; } */
+        } else {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
+                    + "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
+            } else {
+                /* document.getElementById("ISCN").innerHTML="nuc ish(" + probeG.fontcolor("green") + "x" +sigG_write 
+                + "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")" ; */
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
+                    + "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
+            }
         }
-        //function fusion red before green
-        function dualFusion_RG(){
-            if (sigR_write == sigG_write) {
-                if (sigF_high != 0){
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x" 
+    }
+    //function fusion red before green
+    function dualFusion_RG() {
+        if (sigR_write == sigG_write) {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x"
                     + sigR_write + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";
-                   } else {
-                       if (sigF_write == 0){
-                        document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x" 
-                    + sigR_write;
-                   } else {
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x" 
-                    + sigR_write + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";    
-                   }     
-                }    
-            } else { 
-                if (sigF_high != 0) {
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write 
-                    + "," + probeG.fontcolor("green") + "x" + sigG_write +")" + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" 
-                    + sigF_write + ")"; 
-                } else { 
-                    if (sigF_write == 0){
-                        document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write + "," + probeG.fontcolor("green") + "x" + sigG_write +")"
-                    } else {
-                document.getElementById("ISCN").innerHTML= "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write
-                + "," + probeG.fontcolor("green") + "x" + sigG_write +")" + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";    
-                    }
-            }
-          }
-    } 
-        //function fusion green before red
-
-        function dualFusion_GR(){
-            if (sigR_write == sigG_write) {
-                if (sigF_high != 0){
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x" 
-                    + sigG_write + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
-                   } else {
-                       if (sigF_write == 0){
-                        document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x" 
-                    + sigG_write;
-                       } else {
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x" 
-                    + sigG_write + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";    
-                       }  
-                }         
-            } else { 
-                if (sigF_high != 0) {
-                    document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write 
-                    + "," + probeR.fontcolor("red") + "x" + sigR_write +")" + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" 
-                    + sigF_write + ")"; 
+            } else {
+                if (sigF_write == 0) {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x"
+                        + sigR_write;
                 } else {
-                    if (sigF_write == 0) {
-                        document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
-                + "," + probeR.fontcolor("red") + "x" + sigR_write + ")";                
-                    } else {
-                document.getElementById("ISCN").innerHTML= "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
-                + "," + probeR.fontcolor("red") + "x" + sigR_write +")" + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";    
-                    }
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "," + probeG.fontcolor("green") + ")x"
+                        + sigR_write + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";
+                }
+            }
+        } else {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write
+                    + "," + probeG.fontcolor("green") + "x" + sigG_write + ")" + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x"
+                    + sigF_write + ")";
+            } else {
+                if (sigF_write == 0) {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write + "," + probeG.fontcolor("green") + "x" + sigG_write + ")"
+                } else {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeR.fontcolor("red") + "x" + sigR_write
+                        + "," + probeG.fontcolor("green") + "x" + sigG_write + ")" + "(" + probeR.fontcolor("red") + " con " + probeG.fontcolor("green") + "x" + sigF_write + ")";
+                }
             }
         }
     }
-        //wrap all functions in a function controlled by "Write ISCN" button
+    //function fusion green before red
 
-        //copy to clipboard and reset functions
-
-        function copyToClipboard() {
-            var copyText = document.getElementById("ISCN").innerText;
-            navigator.clipboard.writeText(copyText);
-            console.log('Text copied');
-   }
-
-        function submit(){
-        window.location.reload();
-    
-    }
-        function reload() {                          //clears all of the form fields (but the data persists until overwritten)
-            document.getElementById("Input").reset();
-            document.getElementById("ISCN").innerHTML="";
+    function dualFusion_GR() {
+        if (sigR_write == sigG_write) {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x"
+                    + sigG_write + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
+            } else {
+                if (sigF_write == 0) {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x"
+                        + sigG_write;
+                } else {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "," + probeR.fontcolor("red") + ")x"
+                        + sigG_write + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
+                }
+            }
+        } else {
+            if (sigF_high != 0) {
+                document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
+                    + "," + probeR.fontcolor("red") + "x" + sigR_write + ")" + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x"
+                    + sigF_write + ")";
+            } else {
+                if (sigF_write == 0) {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
+                        + "," + probeR.fontcolor("red") + "x" + sigR_write + ")";
+                } else {
+                    document.getElementById("ISCN").innerHTML = "nuc ish(" + probeG.fontcolor("green") + "x" + sigG_write
+                        + "," + probeR.fontcolor("red") + "x" + sigR_write + ")" + "(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x" + sigF_write + ")";
+                }
+            }
         }
+    }
+    //wrap all functions in a function controlled by "Write ISCN" button
+
+    //copy to clipboard and reset functions
+
+    function copyToClipboard() {
+        var copyText = document.getElementById("ISCN").innerText;
+        navigator.clipboard.writeText(copyText);
+        console.log('Text copied');
+    }
+
+    function submit() {
+        window.location.reload();
+
+    }
+    function reload() {                          //clears all of the form fields (but the data persists until overwritten)
+        document.getElementById("Input").reset();
+        document.getElementById("ISCN").innerHTML = "";
+    }
 
 
-    </script>
-    </html>
+</script>
+
+</html>
