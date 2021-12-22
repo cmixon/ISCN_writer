@@ -103,7 +103,7 @@
 
     }
     window.onload = function () {               //re-writes the input on load so that user can continue to see it; this uses jQuery maybe use DOM? 
-        var xP = sessionStorage.getItem("probeR");
+        var xP = sessionStorage.getItem("probeR");  //variable names have "P" to avoid potential conflicts with jQuery
         $('#input1').val(xP);
         var yP = sessionStorage.getItem("probeG");
         $('#input2').val(yP);
