@@ -276,7 +276,7 @@ let num1 = parseInt(sessionStorage.getItem("num1"));
 let num2 = parseInt(sessionStorage.getItem("num2"));
 let num3 = parseInt(sessionStorage.getItem("num3"));
 let node1 = document.createTextNode("/");
-
+let node2 = document.createTextNode("/");
 
   function doEverythingBA_RG(){
    
@@ -314,7 +314,7 @@ let node1 = document.createTextNode("/");
         sorted[1].run.call();
     }
     if (sorted[2].count > 0){
-        document.getElementById("ISCN").appendChild(node1);
+        document.getElementById("ISCN").appendChild(node2);
         sorted[2].run.call();
     }
 }
@@ -357,7 +357,7 @@ if (sorted[1].count > 0){
     sorted[1].run.call();
 }
 if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
+    document.getElementById("ISCN").appendChild(node2);
     sorted[2].run.call();
 }
 }
@@ -396,7 +396,7 @@ if (sorted[1].count > 0){
     sorted[1].run.call();
 }
 if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
+    document.getElementById("ISCN").appendChild(node2);
     sorted[2].run.call();
 }
 }
@@ -433,7 +433,7 @@ if (sorted[1].count > 0){
     sorted[1].run.call();
 }
 if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
+    document.getElementById("ISCN").appendChild(node2);
     sorted[2].run.call();
 }
 }
@@ -442,13 +442,15 @@ if (sorted[2].count > 0){
 function submit() {
     window.location.reload();
 }
+
 function reload() {                          //clears all of the form fields (but the data persists until overwritten)
     document.getElementById("Input").reset();
     document.getElementById("ISCN").innerHTML = "";
 }
 
 function copyToClipboard() {
-    var copyText = document.getElementById("ISCN").innerText;
+    var copyText = document.querySelector("#ISCN").innerHTML;
+    console.log(copyText);
     navigator.clipboard.writeText(copyText);
     console.log('Text copied');
 }
