@@ -13,125 +13,202 @@ let sigF_low;
 let signalValues;
 let sigR_array;
 let sig_Array;
+
 function someFunction(red, green, redsig, greensig, fusion) {
+  let inequalityR = 0; //to handle counts expressed with > or >=
+  let inequalityG = 0;
+  let inequalityF = 0;
 
-    let probes = ["probeR", "probeG", "sigR", "sigG", "sigF", "sigR2", "sigG2", "sigF2",
-        "sigR3", "sigG3", "sigF3"];
-    /* console.log(probes);
+  let probes = [
+    "probeR",
+    "probeG",
+    "sigR",
+    "sigG",
+    "sigF",
+    "sigR2",
+    "sigG2",
+    "sigF2",
+    "sigR3",
+    "sigG3",
+    "sigF3",
+  ];
+  /* console.log(probes);
     console.log(sessionStorage.getItem(probes[red])); */
-    probeR = sessionStorage.getItem(probes[red]);          //recovers stored object as a variable for use in script
-    probeG = sessionStorage.getItem(probes[green]);
-    let sigR = sessionStorage.getItem(probes[redsig]);
-    if (sigR == "") { sigR = "0" };
-    let sigG = sessionStorage.getItem(probes[greensig]);
-    if (sigG == "") { sigG = "0" };
-    let sigF = sessionStorage.getItem(probes[fusion]);
-    if (sigF == "") { sigF = "0" };
-    sigValues = [sigR, sigG, sigF];
-    //console.log(sigValues);
+  probeR = sessionStorage.getItem(probes[red]); //recovers stored object as a variable for use in script
+  probeG = sessionStorage.getItem(probes[green]);
+  let sigR = sessionStorage.getItem(probes[redsig]);
+  //when sigR left blank
+  if (sigR == "") {
+    sigR = "0";
+  }
+  //when sigR includes inequality 
+  if (sigR.includes(">=") || sigR.includes("=>")) {
+    sigR = sigR.slice(2);
+    inequalityR = 2;
+  }
+  if (sigR.includes(">")) {
+    sigR = sigR.slice(1);
+    inequalityR = 1;
+  }
+  console.log(inequalityR);
 
-    //create an array from input variables for signals separated by ~ or -
-    console.log(probeR);
-    let sigR_arr = sigR.split(/[~-]+/);
-    let sigG_arr = sigG.split(/[~-]+/);
-    let sigF_arr = sigF.split(/[~-]+/);
+  let sigG = sessionStorage.getItem(probes[greensig]);
+  if (sigG == "") {
+    sigG = "0";
+  }
+  if (sigG.includes(">=") || sigG.includes("=>")) {
+    sigG = sigG.slice(2);
+    inequalityG = 2;
+  }
+  if (sigG.includes(">")) {
+    sigG = sigG.slice(1);
+    inequalityG = 1;
+  }
+  let sigF = sessionStorage.getItem(probes[fusion]);
+  if (sigF == "") {
+    sigF = "0";
+  }
+  if (sigF.includes(">=") || sigF.includes("=>")) {
+    sigF = sigF.slice(2);
+    inequalityF = 2;
+  }
+  if (sigF.includes(">")) {
+    sigF = sigF.slice(1);
+    inequalityF = 1;
+  }
+  sigValues = [sigR, sigG, sigF];
+  /* console.log(sigValues);
+  console.log(inequalityR);
+  console.log(inequalityG); */
 
-    //convert arrays to number type
-    sigR_array = sigR_arr.map(function (x) {
-        return parseInt(x);
-    });
+  //create an array from input variables for signals separated by ~ or -
+  console.log(probeR);
+  let sigR_arr = sigR.split(/[~-]+/);
+  let sigG_arr = sigG.split(/[~-]+/);
+  let sigF_arr = sigF.split(/[~-]+/);
 
-    let sigG_array = sigG_arr.map(function (x) {
-        return parseInt(x);
-    });
+  //convert arrays to number type
+  sigR_array = sigR_arr.map(function (x) {
+    return parseInt(x);
+  });
 
-    let sigF_array = sigF_arr.map(function (x) {
-        return parseInt(x);
-    });
-    /* console.log(sigR_array);
-    console.log(sigG_array);
-    console.log(sigF_array); */
+  let sigG_array = sigG_arr.map(function (x) {
+    return parseInt(x);
+  });
 
-    //set low and high signals depending on whether single integer or range
-    sigR_low = sigR_array[0] + sigF_array[0];
-    sigG_low = sigG_array[0] + sigF_array[0];
-    sigF_low = sigF_array[0];
+  let sigF_array = sigF_arr.map(function (x) {
+    return parseInt(x);
+  });
+  console.log(sigR_array);
+  console.log(sigG_array);
+  console.log(sigF_array);
 
+  //set low and high signals depending on whether single integer or range
+  sigR_low = sigR_array[0] + sigF_array[0];
+  sigG_low = sigG_array[0] + sigF_array[0];
+  sigF_low = sigF_array[0];
 
-    if (isNaN(sigR_array[1]) && isNaN(sigF_array[1])) {  //R and F are only single signal (no range)
-        sigR_high = 0;
-    } else if (isNaN(sigR_array[1])) {                   //no range for R signal
-        sigR_high = sigR_array[0] + sigF_array[1];
-    } else if (isNaN(sigF_array[1])) {                   //no range for F signal
-        sigR_high = sigR_array[1] + sigF_array[0];
-    } else {                                            //both R and F have signal range
-        sigR_high = sigR_array[1] + sigF_array[1];
-    };
-    /* console.log(sigR_low);
+  if (isNaN(sigR_array[1]) && isNaN(sigF_array[1])) {
+    //R and F are only single signal (no range)
+    sigR_high = 0;
+  } else if (isNaN(sigR_array[1])) {
+    //no range for R signal
+    sigR_high = sigR_array[0] + sigF_array[1];
+  } else if (isNaN(sigF_array[1])) {
+    //no range for F signal
+    sigR_high = sigR_array[1] + sigF_array[0];
+  } else {
+    //both R and F have signal range
+    sigR_high = sigR_array[1] + sigF_array[1];
+  }
+  /* console.log(sigR_low);
     console.log(sigR_high); */
 
-    if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])) {
-        sigG_high = 0;
-    } else if (isNaN(sigG_array[1])) {
-        sigG_high = sigG_array[0] + sigF_array[1];
-    } else if (isNaN(sigF_array[1])) {
-        sigG_high = sigG_array[1] + sigF_array[0];
-    } else {
-        sigG_high = sigG_array[1] + sigF_array[1];
-    };
-    /*  console.log(sigG_low);
+  if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])) {
+    sigG_high = 0;
+  } else if (isNaN(sigG_array[1])) {
+    sigG_high = sigG_array[0] + sigF_array[1];
+  } else if (isNaN(sigF_array[1])) {
+    sigG_high = sigG_array[1] + sigF_array[0];
+  } else {
+    sigG_high = sigG_array[1] + sigF_array[1];
+  }
+  /*  console.log(sigG_low);
      console.log(sigG_high); */
 
+  if (isNaN(sigF_array[1])) {
+    sigF_high = 0;
+  } else {
+    sigF_high = sigF_array[1];
+  }
+  //console.log(sigF_high);
 
-    if (isNaN(sigF_array[1])) {
-        sigF_high = 0;
+  //set total number of signals as single number or range to write for R, G, and F (RSIG etc. in shell script)
+
+  if (sigR_high == 0) {
+//to handle when > or >= or => used
+    if (inequalityR == 2) {
+      sigR_write = ">" + (sigR_low - 1);
+      inequalityR = 0;
+    } else if (inequalityR == 1) {
+      sigR_write = ">" + sigR_low;
+      inequalityR = 0;
     } else {
-        sigF_high = sigF_array[1];
+      sigR_write = sigR_low;
     }
-    //console.log(sigF_high);
+  }
+  //assumes ranges will not be expressed with inequalities
+  if (sigR_high != 0) {
+    sigR_write = sigR_low + "~" + sigR_high;
+  }
 
-    //set total number of signals as single number or range to write for R, G, and F (RSIG etc. in shell script)
-
-    if (sigR_high == 0) {
-        sigR_write = sigR_low;
+  if (sigG_high == 0) {
+    if (inequalityG == 2) {
+      sigG_write = ">" + (sigG_low - 1);
+    } else if (inequalityG == 1) {
+      sigG_write = ">" + sigG_low;
     } else {
-        sigR_write = sigR_low + "~" + sigR_high;
+      sigG_write = sigG_low;
     }
+  }
+  if (sigG_high != 0) {
+    sigG_write = sigG_low + "~" + sigG_high;
+  }
 
-    if (sigG_high == 0) {
-        sigG_write = sigG_low;
-    } else {
-        sigG_write = sigG_low + "~" + sigG_high;
-    }
+  if (sigF_high == 0) {
+    sigF_write = sigF_low;
+  } else {
+    sigF_write = sigF_low + "~" + sigF_high;
+  }
+  //construct array to determine number of sep signals, with ranges when needed
 
-    if (sigF_high == 0) {
-        sigF_write = sigF_low;
-    } else {
-        sigF_write = sigF_low + "~" + sigF_high;
-    }
-    //construct array to determine number of sep signals, with ranges when needed
-
-    const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
-    sig_Array.sort(function (a, b) { return a - b });
-    /* console.log(sig_Array);
+  const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
+  sig_Array.sort(function (a, b) {
+    return a - b;
+  });
+  /* console.log(sig_Array);
     console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]); */
 
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
-        if (sigR_high != 0) {
-            sigTR = sigR_array[0] + "~" + sigR_high;  //not sigR_array[1] since may be undefined
-        } else {
-            sigTR = sigR_array[0];
-        }
+  if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigR_high != 0) {
+      sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
     } else {
-        if (sig_Array[0] != 0) {
-            sigTR = sig_Array[0] + "~" + sig_Array[1];
-        } else if (sig_Array[1] != 0) {
-            sigTR = sig_Array[1] + "~" + sig_Array[2];
-        } else {
-            sigTR = sig_Array[2];
-        }
-        //console.log(sigTR);
+      sigTR = sigR_array[0];
     }
+  } else {
+    if (sig_Array[0] != 0) {
+      sigTR = sig_Array[0] + "~" + sig_Array[1];
+    } else if (sig_Array[1] != 0) {
+      sigTR = sig_Array[1] + "~" + sig_Array[2];
+    } else {
+      sigTR = sig_Array[2];
+    }
+    //console.log(sigTR);
+  }
+  //reset inequality indicators for next iteration
+  inequalityR = 0;
+  inequalityG = 0;
+  ineqautlityF = 0;
 }
 //function breakapart red before green
 function breakapart_RG() {
