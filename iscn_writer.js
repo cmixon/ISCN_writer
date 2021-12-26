@@ -133,8 +133,8 @@ function someFunction(red, green, redsig, greensig, fusion) {
   } else {
     sigG_high = sigG_array[1] + sigF_array[1];
   }
-  /*  console.log(sigG_low);
-     console.log(sigG_high); */
+  console.log(sigG_low);
+     console.log(sigG_high);
 
   if (isNaN(sigF_array[1])) {
     sigF_high = 0;
@@ -186,8 +186,8 @@ function someFunction(red, green, redsig, greensig, fusion) {
   sig_Array.sort(function (a, b) {
     return a - b;
   });
-  /* console.log(sig_Array);
-    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]); */
+ console.log(sig_Array);
+    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
 
   if (sigR_low == sigG_low && sigR_high == sigG_high) {
     if (sigR_high != 0) {
@@ -203,7 +203,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else {
       sigTR = sig_Array[2];
     }
-    //console.log(sigTR);
+    console.log(sigTR);
   }
   //reset inequality indicators for next iteration
   inequalityR = 0;
@@ -215,7 +215,7 @@ function breakapart_RG() {
     let probeName = probeR.slice(2);
     if (sigR_low == sigG_low && sigR_high == sigG_high) {
         if (sigF_high != 0) {
-            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep1 " + probeG + "x" + sigTR + ")");
+            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         } else {
@@ -368,7 +368,7 @@ let node2 = document.createTextNode("/");
     const element2 = document.getElementById("ISCN");
     breakapart_RG();
     element2.appendChild(nuclei2);
-}
+    }
 
     let pattern3_write = function (){
     someFunction(0,1,8,9,10);
@@ -376,7 +376,7 @@ let node2 = document.createTextNode("/");
     const element3 = document.getElementById("ISCN");
     breakapart_RG();
     element3.appendChild(nuclei3);
-}
+    }
 
     let counts = [{"count":num1, "run": pattern1_write},
     {"count":num2, "run": pattern2_write}, 
@@ -421,22 +421,22 @@ function doEverythingBA_GR(){
     breakapart_GR();
     element3.appendChild(nuclei3);
     }
-let counts = [{"count":num1, "run": pattern1_write},
-{"count":num2, "run": pattern2_write}, 
-{"count":num3, "run": pattern3_write}]
+    let counts = [{"count":num1, "run": pattern1_write},
+    {"count":num2, "run": pattern2_write}, 
+    {"count":num3, "run": pattern3_write}]
 
-let sorted = counts.sort((a,b) => b.count - a.count);
-console.log(sorted);
+    let sorted = counts.sort((a,b) => b.count - a.count);
+    console.log(sorted);
 
-sorted[0].run.call();
-if (sorted[1].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
-    sorted[1].run.call();
-}
-if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node2);
-    sorted[2].run.call();
-}
+    sorted[0].run.call();
+    if (sorted[1].count > 0){
+        document.getElementById("ISCN").appendChild(node1);
+        sorted[1].run.call();
+    }
+    if (sorted[2].count > 0){
+        document.getElementById("ISCN").appendChild(node2);
+        sorted[2].run.call();
+    }
 }
 function doEverythingDualFusion_RG(){
 
@@ -460,22 +460,22 @@ function doEverythingDualFusion_RG(){
     element3.appendChild(nuclei3);
 }
 
-let counts = [{"count":num1, "run": pattern1_write},
-{"count":num2, "run": pattern2_write}, 
-{"count":num3, "run": pattern3_write}]
+    let counts = [{"count":num1, "run": pattern1_write},
+    {"count":num2, "run": pattern2_write}, 
+    {"count":num3, "run": pattern3_write}]
 
-let sorted = counts.sort((a,b) => b.count - a.count);
-console.log(sorted);
+    let sorted = counts.sort((a,b) => b.count - a.count);
+    console.log(sorted);
 
-sorted[0].run.call();
-if (sorted[1].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
-    sorted[1].run.call();
-}
-if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node2);
-    sorted[2].run.call();
-}
+    sorted[0].run.call();
+    if (sorted[1].count > 0){
+        document.getElementById("ISCN").appendChild(node1);
+        sorted[1].run.call();
+    }
+    if (sorted[2].count > 0){
+        document.getElementById("ISCN").appendChild(node2);
+        sorted[2].run.call();
+    }
 }
 function doEverythingDualFusion_GR(){
     const nuclei1 = document.createTextNode("[" + sessionStorage.getItem("num1") + "/" + sessionStorage.getItem("denom1") + "]");
@@ -497,22 +497,22 @@ function doEverythingDualFusion_GR(){
     dualFusion_GR();
     element3.appendChild(nuclei3);
     }
-let counts = [{"count":num1, "run": pattern1_write},
-{"count":num2, "run": pattern2_write}, 
-{"count":num3, "run": pattern3_write}]
+    let counts = [{"count":num1, "run": pattern1_write},
+    {"count":num2, "run": pattern2_write}, 
+    {"count":num3, "run": pattern3_write}]
 
-let sorted = counts.sort((a,b) => b.count - a.count);
-console.log(sorted);
+    let sorted = counts.sort((a,b) => b.count - a.count);
+    console.log(sorted);
 
-sorted[0].run.call();
-if (sorted[1].count > 0){
-    document.getElementById("ISCN").appendChild(node1);
-    sorted[1].run.call();
-}
-if (sorted[2].count > 0){
-    document.getElementById("ISCN").appendChild(node2);
-    sorted[2].run.call();
-}
+    sorted[0].run.call();
+    if (sorted[1].count > 0){
+        document.getElementById("ISCN").appendChild(node1);
+        sorted[1].run.call();
+    }
+    if (sorted[2].count > 0){
+        document.getElementById("ISCN").appendChild(node2);
+        sorted[2].run.call();
+    }
 }
 
 
