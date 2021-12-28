@@ -526,9 +526,14 @@ function reload() {                          //clears all of the form fields (bu
 }
 
 function copyToClipboard() {
-    var copyText = document.querySelector("#ISCN").innerHTML;
+    let copyText = document.querySelector("#ISCN").innerHTML;
     console.log(copyText);
     navigator.clipboard.writeText(copyText);
     console.log('Text copied');
 }
 
+if (!navigator.clipboard){
+  alert("clipboard feature not working")
+} else {
+  alert("clipboard working")
+}
