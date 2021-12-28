@@ -188,8 +188,9 @@ function someFunction(red, green, redsig, greensig, fusion) {
   });
  console.log(sig_Array);
     console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
-
-  if (sigR_low == sigG_low && sigR_high == sigG_high) {
+  if (sigR == sigG) {
+    sigTR = sigR;
+  } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
     if (sigR_high != 0) {
       sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
     } else {
@@ -354,7 +355,6 @@ let num2 = parseInt(sessionStorage.getItem("num2"));
 let num3 = parseInt(sessionStorage.getItem("num3"));
 let node1 = document.createTextNode("/");
 let node2 = document.createTextNode("/");
-
   function doEverythingBA_RG(){
    
     const nuclei1 = document.createTextNode("[" + sessionStorage.getItem("num1") + "/" + sessionStorage.getItem("denom1") + "]");
