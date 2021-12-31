@@ -534,6 +534,4 @@ function copyToClipboard() {
 
 if (!navigator.clipboard){
   alert("clipboard feature not working")
-} else {
-  alert("clipboard working")
 }
