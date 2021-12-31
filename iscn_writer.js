@@ -209,7 +209,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   //reset inequality indicators for next iteration
   inequalityR = 0;
   inequalityG = 0;
-  ineqautlityF = 0;
+  inequatlityF = 0;
 }
 //function breakapart red before green
 function breakapart_RG() {
