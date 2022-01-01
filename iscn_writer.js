@@ -12,12 +12,17 @@ let sigF_high;
 let sigF_low;
 let signalValues;
 let sigR_array;
-let sig_Array;
+let sigRo;
+//let sig_Array;
+
+let inequalityR = 0; //to handle counts expressed with > or >=
+let inequalityG = 0;
+let inequalityF = 0;
 
 function someFunction(red, green, redsig, greensig, fusion) {
-  let inequalityR = 0; //to handle counts expressed with > or >=
+ /*  let inequalityR = 0; //to handle counts expressed with > or >=
   let inequalityG = 0;
-  let inequalityF = 0;
+  let inequalityF = 0; */
 
   let probes = [
     "probeR",
@@ -41,6 +46,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   if (sigR == "") {
     sigR = "0";
   }
+  sigRo=sigR;
   //when sigR includes inequality 
   if (sigR.includes(">=") || sigR.includes("=>")) {
     sigR = sigR.slice(2);
@@ -50,7 +56,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
     sigR = sigR.slice(1);
     inequalityR = 1;
   }
-  console.log(inequalityR);
+ // console.log(inequalityR);
 
   let sigG = sessionStorage.getItem(probes[greensig]);
   if (sigG == "") {
@@ -77,9 +83,9 @@ function someFunction(red, green, redsig, greensig, fusion) {
     inequalityF = 1;
   }
   sigValues = [sigR, sigG, sigF];
-  /* console.log(sigValues);
+  console.log(sigValues);
   console.log(inequalityR);
-  console.log(inequalityG); */
+  console.log(inequalityG);
 
   //create an array from input variables for signals separated by ~ or -
   console.log(probeR);
@@ -148,49 +154,72 @@ function someFunction(red, green, redsig, greensig, fusion) {
   if (sigR_high == 0) {
 //to handle when > or >= or => used
     if (inequalityR == 2) {
-      sigR_write = ">" + (sigR_low - 1);
-      inequalityR = 0;
+      sigR_write = ">A" + (sigR_low - 1);
+     // inequalityR = 0;
     } else if (inequalityR == 1) {
-      sigR_write = ">" + sigR_low;
-      inequalityR = 0;
-    } else {
+      sigR_write = ">B" + sigR_low;
+     // inequalityR = 0;
+    } else if (inequalityF != 0){
+      sigR_write = ">C" + sigR_low;
+    } else{
       sigR_write = sigR_low;
     }
   }
   //assumes ranges will not be expressed with inequalities
   if (sigR_high != 0) {
-    sigR_write = sigR_low + "~" + sigR_high;
+    sigR_write = sigR_low + "~D" + sigR_high;
   }
 
   if (sigG_high == 0) {
     if (inequalityG == 2) {
-      sigG_write = ">" + (sigG_low - 1);
+      sigG_write = ">E" + (sigG_low - 1);
     } else if (inequalityG == 1) {
-      sigG_write = ">" + sigG_low;
-    } else {
+      sigG_write = ">F" + sigG_low;
+    } else if (inequalityF != 0){
+      sigG_write = ">G" + sigG_low;
+    } else{
       sigG_write = sigG_low;
     }
   }
   if (sigG_high != 0) {
-    sigG_write = sigG_low + "~" + sigG_high;
+    sigG_write = sigG_low + "~H" + sigG_high;
   }
 
   if (sigF_high == 0) {
-    sigF_write = sigF_low;
-  } else {
-    sigF_write = sigF_low + "~" + sigF_high;
+    if (inequalityF ==2){
+      sigF_write = ">" + (sigF_low - 1);
+    } else if (inequalityF == 1){
+      sigF_write = ">" + sigF_low;
+    } else {
+    sigF_write = "I" + sigF_low;
+    }
+  } 
+  if (sigF_high !=0){
+    sigF_write = sigF_low + "~J" + sigF_high;
   }
+
   //construct array to determine number of sep signals, with ranges when needed
 
-  const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
+  let sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
   sig_Array.sort(function (a, b) {
     return a - b;
   });
- console.log(sig_Array);
-    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
-  if (sigR == sigG) {
+  console.log(sigRo);1
+/*  console.log(sig_Array);
+    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]); */
+  if (sigR == sigG){
+    if (inequalityR = 0){
     sigTR = sigR;
-  } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    } else {
+    sigTR = sigRo;
+    }
+  
+    /* } else if (inequalityF == 1) {
+      sigTR = ">" + sigF;
+    } else {
+      sigTR = ">" + (sigF-1); */
+
+    } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
     if (sigR_high != 0) {
       sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
     } else {
@@ -204,33 +233,34 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else {
       sigTR = sig_Array[2];
     }
-    console.log(sigTR);
-  }
+   }
+   console.log(sigTR);
+  console.log(inequalityR, inequalityG);
   //reset inequality indicators for next iteration
-  inequalityR = 0;
-  inequalityG = 0;
-  inequatlityF = 0;
+  //inequalityR = 0;
+  //inequalityG = 0;
+  inequalityF = 0;
 }
 //function breakapart red before green
 function breakapart_RG() {
     let probeName = probeR.slice(2);
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigR_low == sigG_low && sigR_high == sigG_high && inequalityR == inequalityG) {
         if (sigF_high != 0) {
-            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
+            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")K");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         } else {
-            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
+            const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")L");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         }
     } else {
         if (sigF_high != 0) {
-            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")");
+            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")M");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         } else {
-            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")");
+            const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")N");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         }
@@ -241,7 +271,7 @@ function breakapart_RG() {
 
 function breakapart_GR() {
     let probeName = probeR.slice(2);
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigR_low == sigG_low && sigR_high == sigG_high && inequalityR == inequalityG) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write
                 + ")(" + probeG + " sep " + probeR + "x" + sigTR + ")");
@@ -274,7 +304,7 @@ function breakapart_GR() {
 }
 //function fusion red before green
 function dualFusion_RG() {
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigR_low == sigG_low && sigR_high == sigG_high && inequalityR == inequalityG) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeR + "," + probeG + ")x"
                 + sigR_write + "(" + probeR + " con " + probeG + "x" + sigF_write + ")");
@@ -313,7 +343,7 @@ function dualFusion_RG() {
 //function fusion green before red
 
 function dualFusion_GR() {
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigR_low == sigG_low && sigR_high == sigG_high && inequalityR == inequalityG) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeG + "," + probeR + ")x" + sigG_write + "(" + probeG + " con " + probeR + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
@@ -532,6 +562,6 @@ function copyToClipboard() {
     console.log('Text copied');
 }
 
-if (!navigator.clipboard){
+/* if (!navigator.clipboard){
   alert("clipboard feature not working")
-}
+} */
