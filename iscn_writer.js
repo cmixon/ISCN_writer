@@ -12,7 +12,17 @@ let sigF_high;
 let sigF_low;
 let signalValues;
 let sigR_array;
+<<<<<<< Updated upstream
 let sig_Array;
+=======
+let sigRo;
+let sigGo;
+//let sig_Array;
+
+let inequalityR = 0; //to handle counts expressed with > or >=
+let inequalityG = 0;
+let inequalityF = 0;
+>>>>>>> Stashed changes
 
 function someFunction(red, green, redsig, greensig, fusion) {
   let inequalityR = 0; //to handle counts expressed with > or >=
@@ -56,6 +66,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   if (sigG == "") {
     sigG = "0";
   }
+  sigGo = sigG;
   if (sigG.includes(">=") || sigG.includes("=>")) {
     sigG = sigG.slice(2);
     inequalityG = 2;
@@ -151,9 +162,17 @@ function someFunction(red, green, redsig, greensig, fusion) {
       sigR_write = ">" + (sigR_low - 1);
       inequalityR = 0;
     } else if (inequalityR == 1) {
+<<<<<<< Updated upstream
       sigR_write = ">" + sigR_low;
       inequalityR = 0;
     } else {
+=======
+      sigR_write = ">B" + sigR_low;
+     // inequalityR = 0;
+    /* } else if (inequalityF != 0){
+      sigR_write = ">C" + sigR_low; */
+    } else{
+>>>>>>> Stashed changes
       sigR_write = sigR_low;
     }
   }
@@ -166,8 +185,15 @@ function someFunction(red, green, redsig, greensig, fusion) {
     if (inequalityG == 2) {
       sigG_write = ">" + (sigG_low - 1);
     } else if (inequalityG == 1) {
+<<<<<<< Updated upstream
       sigG_write = ">" + sigG_low;
     } else {
+=======
+      sigG_write = ">F" + sigG_low;
+    /* } else if (inequalityF != 0){
+      sigG_write = ">G" + sigG_low; */
+    } else{
+>>>>>>> Stashed changes
       sigG_write = sigG_low;
     }
   }
@@ -209,12 +235,20 @@ function someFunction(red, green, redsig, greensig, fusion) {
   //reset inequality indicators for next iteration
   inequalityR = 0;
   inequalityG = 0;
+<<<<<<< Updated upstream
   inequatlityF = 0;
+=======
+  inequalityF = 0;
+>>>>>>> Stashed changes
 }
 //function breakapart red before green
 function breakapart_RG() {
     let probeName = probeR.slice(2);
+<<<<<<< Updated upstream
     if (sigR_low == sigG_low && sigR_high == sigG_high) {
+=======
+    if (sigRo == sigGo) {
+>>>>>>> Stashed changes
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
             const element = document.getElementById("ISCN");
