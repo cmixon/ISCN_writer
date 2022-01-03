@@ -12,18 +12,16 @@ let sigF_high;
 let sigF_low;
 let signalValues;
 let sigR_array;
-<<<<<<< Updated upstream
 let sig_Array;
-=======
+
 let sigRo;
 let sigGo;
+let sigFo;
 //let sig_Array;
 
 let inequalityR = 0; //to handle counts expressed with > or >=
 let inequalityG = 0;
 let inequalityF = 0;
->>>>>>> Stashed changes
-
 function someFunction(red, green, redsig, greensig, fusion) {
   let inequalityR = 0; //to handle counts expressed with > or >=
   let inequalityG = 0;
@@ -51,6 +49,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   if (sigR == "") {
     sigR = "0";
   }
+  sigRo = sigR;
   //when sigR includes inequality 
   if (sigR.includes(">=") || sigR.includes("=>")) {
     sigR = sigR.slice(2);
@@ -60,7 +59,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
     sigR = sigR.slice(1);
     inequalityR = 1;
   }
-  console.log(inequalityR);
+  //console.log(inequalityR);
 
   let sigG = sessionStorage.getItem(probes[greensig]);
   if (sigG == "") {
@@ -79,6 +78,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   if (sigF == "") {
     sigF = "0";
   }
+  sigFo = sigF;
   if (sigF.includes(">=") || sigF.includes("=>")) {
     sigF = sigF.slice(2);
     inequalityF = 2;
@@ -90,10 +90,12 @@ function someFunction(red, green, redsig, greensig, fusion) {
   sigValues = [sigR, sigG, sigF];
   /* console.log(sigValues);
   console.log(inequalityR);
-  console.log(inequalityG); */
-
+  console.log(inequalityG);
+  console.log(sigRo);
+  console.log(sigGo);
+ */
   //create an array from input variables for signals separated by ~ or -
-  console.log(probeR);
+  //console.log(probeR);
   let sigR_arr = sigR.split(/[~-]+/);
   let sigG_arr = sigG.split(/[~-]+/);
   let sigF_arr = sigF.split(/[~-]+/);
@@ -110,9 +112,9 @@ function someFunction(red, green, redsig, greensig, fusion) {
   let sigF_array = sigF_arr.map(function (x) {
     return parseInt(x);
   });
-  console.log(sigR_array);
+ /*  console.log(sigR_array);
   console.log(sigG_array);
-  console.log(sigF_array);
+  console.log(sigF_array); */
 
   //set low and high signals depending on whether single integer or range
   sigR_low = sigR_array[0] + sigF_array[0];
@@ -144,8 +146,8 @@ function someFunction(red, green, redsig, greensig, fusion) {
   } else {
     sigG_high = sigG_array[1] + sigF_array[1];
   }
-  console.log(sigG_low);
-     console.log(sigG_high);
+ /*  console.log(sigG_low);
+  console.log(sigG_high); */
 
   if (isNaN(sigF_array[1])) {
     sigF_high = 0;
@@ -160,62 +162,93 @@ function someFunction(red, green, redsig, greensig, fusion) {
 //to handle when > or >= or => used
     if (inequalityR == 2) {
       sigR_write = ">" + (sigR_low - 1);
-      inequalityR = 0;
-    } else if (inequalityR == 1) {
-<<<<<<< Updated upstream
+      //inequalityR = 0;
+    } else if (inequalityR == 1 || inequalityF == 1) {
       sigR_write = ">" + sigR_low;
-      inequalityR = 0;
-    } else {
-=======
-      sigR_write = ">B" + sigR_low;
-     // inequalityR = 0;
+      //inequalityR = 0;
     /* } else if (inequalityF != 0){
       sigR_write = ">C" + sigR_low; */
     } else{
->>>>>>> Stashed changes
+
       sigR_write = sigR_low;
     }
   }
-  //assumes ranges will not be expressed with inequalities
+  //handles when F ranges expressed with inequalities
   if (sigR_high != 0) {
+    if (inequalityR != 0){
+      sigR_write = ">" + sigR_low + "~" + sigR_high;
+    } else{
     sigR_write = sigR_low + "~" + sigR_high;
   }
-
+}
   if (sigG_high == 0) {
-    if (inequalityG == 2) {
+    if (inequalityG == 2 || inequalityF == 2) {
       sigG_write = ">" + (sigG_low - 1);
-    } else if (inequalityG == 1) {
-<<<<<<< Updated upstream
+    } else if (inequalityG == 1 || inequalityF == 1) {
       sigG_write = ">" + sigG_low;
-    } else {
-=======
-      sigG_write = ">F" + sigG_low;
     /* } else if (inequalityF != 0){
       sigG_write = ">G" + sigG_low; */
     } else{
->>>>>>> Stashed changes
+
       sigG_write = sigG_low;
     }
   }
+  //handles when F ranges expressed with inequalities
   if (sigG_high != 0) {
+    if (inequalityG != 0){
+      sigG_write = ">" + sigG_low + "~" + sigG_high;
+    } else{
     sigG_write = sigG_low + "~" + sigG_high;
   }
+}
 
-  if (sigF_high == 0) {
+/*   if (sigF_high == 0) {
+    if (inequalityF > 0){
+      sigF_write = sigFo;
+    }
     sigF_write = sigF_low;
   } else {
     sigF_write = sigF_low + "~" + sigF_high;
+  } */
+
+  if (sigF_high == 0) {
+    //to handle when > or >= or => used
+        if (inequalityF == 2) {
+          sigF_write = ">" + (sigF_low - 1);
+          //inequalityR = 0;
+        } else if (inequalityF == 1) {
+          sigF_write = ">" + sigF_low;
+          //inequalityR = 0;
+        /* } else if (inequalityF != 0){
+          sigR_write = ">C" + sigR_low; */
+        } else{
+    
+          sigF_write = sigF_low;
+        }
+      }
+
+       //handles when F ranges expressed with inequalities
+  if (sigF_high != 0) {
+    if (inequalityF != 0){
+      sigF_write = ">" + sigF_low + "~" + sigF_high;
+    } else{
+    sigF_write = sigF_low + "~" + sigF_high;
   }
+}
   //construct array to determine number of sep signals, with ranges when needed
 
   const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
   sig_Array.sort(function (a, b) {
     return a - b;
   });
- console.log(sig_Array);
-    console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
-  if (sigR == sigG) {
-    sigTR = sigR;
+/*  console.log(sig_Array);
+ console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
+   */
+  if (inequalityF == 0){
+    if (sigRo == sigGo && inequalityR != 2) {
+    sigTR = sigRo;
+     } else if (sigRo == sigGo && inequalityR == 2){
+       sigTR = ">" + (sigR - 1);
   } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
     if (sigR_high != 0) {
       sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
@@ -230,25 +263,22 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else {
       sigTR = sig_Array[2];
     }
-    console.log(sigTR);
+  //  console.log(sigTR);
+  }
   }
   //reset inequality indicators for next iteration
   inequalityR = 0;
   inequalityG = 0;
-<<<<<<< Updated upstream
-  inequatlityF = 0;
-=======
   inequalityF = 0;
->>>>>>> Stashed changes
+  //sigRo = 0;
+  sigFo = 0;
+  //sigGo = 0;   
+
 }
 //function breakapart red before green
 function breakapart_RG() {
     let probeName = probeR.slice(2);
-<<<<<<< Updated upstream
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
-=======
     if (sigRo == sigGo) {
->>>>>>> Stashed changes
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
             const element = document.getElementById("ISCN");
@@ -275,7 +305,7 @@ function breakapart_RG() {
 
 function breakapart_GR() {
     let probeName = probeR.slice(2);
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigRo == sigGo) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write
                 + ")(" + probeG + " sep " + probeR + "x" + sigTR + ")");
@@ -308,7 +338,7 @@ function breakapart_GR() {
 }
 //function fusion red before green
 function dualFusion_RG() {
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigRo == sigGo) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeR + "," + probeG + ")x"
                 + sigR_write + "(" + probeR + " con " + probeG + "x" + sigF_write + ")");
@@ -347,7 +377,7 @@ function dualFusion_RG() {
 //function fusion green before red
 
 function dualFusion_GR() {
-    if (sigR_low == sigG_low && sigR_high == sigG_high) {
+    if (sigRo == sigGo) {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeG + "," + probeR + ")x" + sigG_write + "(" + probeG + " con " + probeR + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
@@ -417,7 +447,7 @@ let node2 = document.createTextNode("/");
     {"count":num3, "run": pattern3_write}]
     
     let sorted = counts.sort((a,b) => b.count - a.count);
-    console.log(sorted);
+   // console.log(sorted);
     
     sorted[0].run.call();
     if (sorted[1].count > 0){
@@ -429,7 +459,7 @@ let node2 = document.createTextNode("/");
         sorted[2].run.call();
     }
 }
-console.log(typeof(num1));
+//console.log(typeof(num1));
 
 
 function doEverythingBA_GR(){
@@ -460,7 +490,7 @@ function doEverythingBA_GR(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-    console.log(sorted);
+   // console.log(sorted);
 
     sorted[0].run.call();
     if (sorted[1].count > 0){
@@ -499,7 +529,7 @@ function doEverythingDualFusion_RG(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-    console.log(sorted);
+   // console.log(sorted);
 
     sorted[0].run.call();
     if (sorted[1].count > 0){
@@ -536,7 +566,7 @@ function doEverythingDualFusion_GR(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-    console.log(sorted);
+   // console.log(sorted);
 
     sorted[0].run.call();
     if (sorted[1].count > 0){
@@ -561,11 +591,11 @@ function reload() {                          //clears all of the form fields (bu
 
 function copyToClipboard() {
     let copyText = document.querySelector("#ISCN").innerHTML;
-    console.log(copyText);
+   // console.log(copyText);
     navigator.clipboard.writeText(copyText);
     console.log('Text copied');
 }
-
+/* 
 if (!navigator.clipboard){
   alert("clipboard feature not working")
-}
+} */
