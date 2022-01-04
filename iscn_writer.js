@@ -88,12 +88,12 @@ function someFunction(red, green, redsig, greensig, fusion) {
     inequalityF = 1;
   }
   sigValues = [sigR, sigG, sigF];
-  /* console.log(sigValues);
+ console.log(sigValues);
   console.log(inequalityR);
   console.log(inequalityG);
   console.log(sigRo);
   console.log(sigGo);
- */
+ 
   //create an array from input variables for signals separated by ~ or -
   //console.log(probeR);
   let sigR_arr = sigR.split(/[~-]+/);
@@ -160,7 +160,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
 
   if (sigR_high == 0) {
 //to handle when > or >= or => used
-    if (inequalityR == 2) {
+    if (inequalityR == 2 || inequalityF == 2) {
       sigR_write = ">" + (sigR_low - 1);
       //inequalityR = 0;
     } else if (inequalityR == 1 || inequalityF == 1) {
@@ -241,13 +241,13 @@ function someFunction(red, green, redsig, greensig, fusion) {
   sig_Array.sort(function (a, b) {
     return a - b;
   });
-/*  console.log(sig_Array);
+console.log(sig_Array);
  console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
-   */
-  if (inequalityF == 0){
-    if (sigRo == sigGo && inequalityR != 2) {
+
+  if (sigRo == sigGo){
+    if (inequalityR != 2) {
     sigTR = sigRo;
-     } else if (sigRo == sigGo && inequalityR == 2){
+     } else if (inequalityR == 2){
        sigTR = ">" + (sigR - 1);
   } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
     if (sigR_high != 0) {
@@ -255,17 +255,18 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else {
       sigTR = sigR_array[0];
     }
-  } else {
+  
+}else {
     if (sig_Array[0] != 0) {
-      sigTR = sig_Array[0] + "~" + sig_Array[1];
+      sigTR = sig_Array[0] + "~e" + sig_Array[1];
     } else if (sig_Array[1] != 0) {
-      sigTR = sig_Array[1] + "~" + sig_Array[2];
+      sigTR = sig_Array[1] + "~f" + sig_Array[2];
     } else {
-      sigTR = sig_Array[2];
+      sigTR = sigRo;
     }
-  //  console.log(sigTR);
   }
   }
+  console.log(sigTR);
   //reset inequality indicators for next iteration
   inequalityR = 0;
   inequalityG = 0;
@@ -283,20 +284,24 @@ function breakapart_RG() {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
+            
         } else {
             const node = document.createTextNode("(" + probeName + "x" + sigR_write + ")(" + probeR + " sep " + probeG + "x" + sigTR + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
+            
         }
     } else {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
+            
         } else {
             const node = document.createTextNode("(" + probeR + "x" + sigR_write + "," + probeG + "x" + sigG_write + ")(" + probeR + " con " + probeG + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
             element.appendChild(node);
+            
         }
     }
 }
@@ -425,13 +430,16 @@ let node2 = document.createTextNode("/");
     const element1 = document.getElementById("ISCN");
     let pattern1_write = function (){someFunction(0,1,2,3,4);
     breakapart_RG();
-    element1.appendChild(nuclei1);}
+    element1.appendChild(nuclei1);
+   // sigTR = 100;
+  }
 
    let pattern2_write = function (){ someFunction(0,1,5,6,7);
     const nuclei2 = document.createTextNode("[" + sessionStorage.getItem("num2") + "/" + sessionStorage.getItem("denom2") + "]");
     const element2 = document.getElementById("ISCN");
     breakapart_RG();
     element2.appendChild(nuclei2);
+   // sigTR =200;
     }
 
     let pattern3_write = function (){
@@ -440,6 +448,7 @@ let node2 = document.createTextNode("/");
     const element3 = document.getElementById("ISCN");
     breakapart_RG();
     element3.appendChild(nuclei3);
+   // sigTR = 300;
     }
 
     let counts = [{"count":num1, "run": pattern1_write},
@@ -450,13 +459,16 @@ let node2 = document.createTextNode("/");
    // console.log(sorted);
     
     sorted[0].run.call();
+    //console.log("first pattern written");
     if (sorted[1].count > 0){
         document.getElementById("ISCN").appendChild(node1);
         sorted[1].run.call();
+       // console.log("second pattern written");
     }
     if (sorted[2].count > 0){
         document.getElementById("ISCN").appendChild(node2);
         sorted[2].run.call();
+       // console.log("third pattern written");
     }
 }
 //console.log(typeof(num1));
