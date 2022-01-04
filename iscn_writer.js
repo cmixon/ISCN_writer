@@ -13,7 +13,6 @@ let sigF_low;
 let signalValues;
 let sigR_array;
 let sig_Array;
-
 let sigRo;
 let sigGo;
 let sigFo;
@@ -50,7 +49,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
     sigR = "0";
   }
   sigRo = sigR;
-  //when sigR includes inequality 
+  //when sigR includes inequality
   if (sigR.includes(">=") || sigR.includes("=>")) {
     sigR = sigR.slice(2);
     inequalityR = 2;
@@ -88,12 +87,12 @@ function someFunction(red, green, redsig, greensig, fusion) {
     inequalityF = 1;
   }
   sigValues = [sigR, sigG, sigF];
- console.log(sigValues);
+  console.log(sigValues);
   console.log(inequalityR);
   console.log(inequalityG);
   console.log(sigRo);
   console.log(sigGo);
- 
+
   //create an array from input variables for signals separated by ~ or -
   //console.log(probeR);
   let sigR_arr = sigR.split(/[~-]+/);
@@ -112,7 +111,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   let sigF_array = sigF_arr.map(function (x) {
     return parseInt(x);
   });
- /*  console.log(sigR_array);
+  /*  console.log(sigR_array);
   console.log(sigG_array);
   console.log(sigF_array); */
 
@@ -146,7 +145,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   } else {
     sigG_high = sigG_array[1] + sigF_array[1];
   }
- /*  console.log(sigG_low);
+  /*  console.log(sigG_low);
   console.log(sigG_high); */
 
   if (isNaN(sigF_array[1])) {
@@ -159,50 +158,48 @@ function someFunction(red, green, redsig, greensig, fusion) {
   //set total number of signals as single number or range to write for R, G, and F (RSIG etc. in shell script)
 
   if (sigR_high == 0) {
-//to handle when > or >= or => used
+    //to handle when > or >= or => used
     if (inequalityR == 2 || inequalityF == 2) {
       sigR_write = ">" + (sigR_low - 1);
       //inequalityR = 0;
     } else if (inequalityR == 1 || inequalityF == 1) {
       sigR_write = ">" + sigR_low;
       //inequalityR = 0;
-    /* } else if (inequalityF != 0){
+      /* } else if (inequalityF != 0){
       sigR_write = ">C" + sigR_low; */
-    } else{
-
+    } else {
       sigR_write = sigR_low;
     }
   }
   //handles when F ranges expressed with inequalities
   if (sigR_high != 0) {
-    if (inequalityR != 0){
+    if (inequalityR != 0) {
       sigR_write = ">" + sigR_low + "~" + sigR_high;
-    } else{
-    sigR_write = sigR_low + "~" + sigR_high;
+    } else {
+      sigR_write = sigR_low + "~" + sigR_high;
+    }
   }
-}
   if (sigG_high == 0) {
     if (inequalityG == 2 || inequalityF == 2) {
       sigG_write = ">" + (sigG_low - 1);
     } else if (inequalityG == 1 || inequalityF == 1) {
       sigG_write = ">" + sigG_low;
-    /* } else if (inequalityF != 0){
+      /* } else if (inequalityF != 0){
       sigG_write = ">G" + sigG_low; */
-    } else{
-
+    } else {
       sigG_write = sigG_low;
     }
   }
   //handles when F ranges expressed with inequalities
   if (sigG_high != 0) {
-    if (inequalityG != 0){
+    if (inequalityG != 0) {
       sigG_write = ">" + sigG_low + "~" + sigG_high;
-    } else{
-    sigG_write = sigG_low + "~" + sigG_high;
+    } else {
+      sigG_write = sigG_low + "~" + sigG_high;
+    }
   }
-}
 
-/*   if (sigF_high == 0) {
+  /*   if (sigF_high == 0) {
     if (inequalityF > 0){
       sigF_write = sigFo;
     }
@@ -213,58 +210,62 @@ function someFunction(red, green, redsig, greensig, fusion) {
 
   if (sigF_high == 0) {
     //to handle when > or >= or => used
-        if (inequalityF == 2) {
-          sigF_write = ">" + (sigF_low - 1);
-          //inequalityR = 0;
-        } else if (inequalityF == 1) {
-          sigF_write = ">" + sigF_low;
-          //inequalityR = 0;
-        /* } else if (inequalityF != 0){
+    if (inequalityF == 2) {
+      sigF_write = ">" + (sigF_low - 1);
+      //inequalityR = 0;
+    } else if (inequalityF == 1) {
+      sigF_write = ">" + sigF_low;
+      //inequalityR = 0;
+      /* } else if (inequalityF != 0){
           sigR_write = ">C" + sigR_low; */
-        } else{
-    
-          sigF_write = sigF_low;
-        }
-      }
-
-       //handles when F ranges expressed with inequalities
-  if (sigF_high != 0) {
-    if (inequalityF != 0){
-      sigF_write = ">" + sigF_low + "~" + sigF_high;
-    } else{
-    sigF_write = sigF_low + "~" + sigF_high;
+    } else {
+      sigF_write = sigF_low;
+    }
   }
-}
+
+  //handles when F ranges expressed with inequalities
+  if (sigF_high != 0) {
+    if (inequalityF != 0) {
+      sigF_write = ">" + sigF_low + "~" + sigF_high;
+    } else {
+      sigF_write = sigF_low + "~" + sigF_high;
+    }
+  }
   //construct array to determine number of sep signals, with ranges when needed
 
   const sig_Array = [sigR_low, sigR_high, sigG_low, sigG_high];
   sig_Array.sort(function (a, b) {
     return a - b;
   });
-console.log(sig_Array);
- console.log(sigR_array[0], sigR_array[1],sig_Array[0],sig_Array[1], sig_Array[2]);
+  console.log(sig_Array);
+  console.log(
+    sigR_array[0],
+    sigR_array[1],
+    sig_Array[0],
+    sig_Array[1],
+    sig_Array[2]
+  );
 
-  if (sigRo == sigGo){
+  if (sigRo == sigGo) {
     if (inequalityR != 2) {
-    sigTR = sigRo;
-     } else if (inequalityR == 2){
-       sigTR = ">" + (sigR - 1);
-  } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
-    if (sigR_high != 0) {
-      sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
-    } else {
-      sigTR = sigR_array[0];
-    }
-  
-}else {
-    if (sig_Array[0] != 0) {
-      sigTR = sig_Array[0] + "~e" + sig_Array[1];
-    } else if (sig_Array[1] != 0) {
-      sigTR = sig_Array[1] + "~f" + sig_Array[2];
-    } else {
       sigTR = sigRo;
+    } else if (inequalityR == 2) {
+      sigTR = ">" + (sigR - 1);
+    } else if (sigR_low == sigG_low && sigR_high == sigG_high) {
+      if (sigR_high != 0) {
+        sigTR = sigR_array[0] + "~" + sigR_high; //not sigR_array[1] since may be undefined
+      } else {
+        sigTR = sigR_array[0];
+      }
+    } else {
+      if (sig_Array[0] != 0) {
+        sigTR = sig_Array[0] + "~e" + sig_Array[1];
+      } else if (sig_Array[1] != 0) {
+        sigTR = sig_Array[1] + "~f" + sig_Array[2];
+      } else {
+        sigTR = sigRo;
+      }
     }
-  }
   }
   console.log(sigTR);
   //reset inequality indicators for next iteration
@@ -273,8 +274,7 @@ console.log(sig_Array);
   inequalityF = 0;
   //sigRo = 0;
   sigFo = 0;
-  //sigGo = 0;   
-
+  //sigGo = 0;
 }
 //function breakapart red before green
 function breakapart_RG() {
