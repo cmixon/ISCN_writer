@@ -13,10 +13,25 @@ let sigF_low;
 let signalValues;
 let sigR_array;
 let sig_Array;
-let sigRo;
+let sigRo;  //to preserve original entry of the probe signal counts
 let sigGo;
 let sigFo;
-//let sig_Array;
+const red_probes = ["11qtel","20S108","3'ALK","3'BCL2","3'BRAF","3'DDIT3","3'EPOR","3'FGFR1",
+  "3'IGH","3'JAK2","3'NTRK1","3'NTRK2","3'NTRK3","3'NUP98","3'PDGFB","3'PDGFRB","3'RARA","3'ROS1",
+  "5'BCL6","5'CBFB","5'CRLF2","5'DUSP22-IRF4","5'ETV6","5'EWSR1","5'FGFR2","5'KMT2A","5'MALT1","5'MYC",
+  "5'RET","5'SS18","5'TFE3","5'TP63","5'USP6","ABL1","ACP5","BCL2","CCND1","CDKN2A","CEN10",
+  "CEN3","CEN4","CHIC2","CKS1B","D13S319","D7S926","DLEU1&2","EGFR","EGR1","FGFR3","GLTSCR2","HER2",
+  "MAF","MAFB","MALT1","MDM2","MECOM","MET","MYB","MYC","MYC","MYCN","NUP214","PBX1","PDGFRA","PML",
+  "PTEN","RREB1","RUNX1","RUNX1T1","SMAD6","TCL1cen","TNFRSF14","TP53","TP53","TP63","TP63","TPRG1L"
+];
+  const green_probes = ["20qter","3'BCL6","3'CBFB","3'CRLF2","3'DUSP22-IRF4","3'ETV6","3'EWSR1","3'FGFR2",
+  "3'KMT2A","3'MALT1","3'MYC","3'RET","3'SS18","3'TFE3","3'TP63","3'USP6","5'ALK","5'BCL2","5'BRAF",
+  "5'DDIT3","5'EPOR","5'FGFR1","5'IGH","5'JAK2","5'KMT2A","5'NTRK1","5'NTRK2","5'NTRK3","5'NUP98","5'PDGFB","5'PDGFRB",
+  "5'RARA","5'ROS1","API2","ATM","BCR","BLVRB","CDKN2C","CEN1","CEN10","CEN12","CEN12","CEN17","CEN17","CEN2",
+  "CEN4","CEN6","CEN7","CEN7","CEN7","CEN8","CEN9","CEN9","CEP1","CEP19","CEP8","D5S1518E-D5S1976","D7S2460","D9S1783",
+  "DEK","ETV6","FIP1L1","IGH","IGH","IGH","IGH","IGH","IGH","LAMP1","LAMP1","NF1","RARA","RPN1","RPS14","RUNX1",
+  "SEC63","TBL1XR1","TBL1XR1","TCF3","TCL1tel","ABL2", "ASS1", "CEN11","CEN7", "CEN8", 
+  "D9S1783", "hTERT", "LAMP1", "PDGFRA", "ZNF443"]; //Probes beginning at position with "ABL2" are actually Acqua
 
 let inequalityR = 0; //to handle counts expressed with > or >=
 let inequalityG = 0;
@@ -25,7 +40,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
   let inequalityR = 0; //to handle counts expressed with > or >=
   let inequalityG = 0;
   let inequalityF = 0;
-
   let probes = [
     "probeR",
     "probeG",
@@ -39,10 +53,10 @@ function someFunction(red, green, redsig, greensig, fusion) {
     "sigG3",
     "sigF3",
   ];
-  /* console.log(probes);
-    console.log(sessionStorage.getItem(probes[red])); */
-  probeR = sessionStorage.getItem(probes[red]); //recovers stored object as a variable for use in script
-  probeG = sessionStorage.getItem(probes[green]);
+  
+  probeR = sessionStorage.getItem(probes[red]).toUpperCase(); //recovers stored object as a variable for use in script
+  probeG = sessionStorage.getItem(probes[green]).toUpperCase();
+
   let sigR = sessionStorage.getItem(probes[redsig]);
   //when sigR left blank
   if (sigR == "") {
@@ -58,7 +72,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
     sigR = sigR.slice(1);
     inequalityR = 1;
   }
-  //console.log(inequalityR);
 
   let sigG = sessionStorage.getItem(probes[greensig]);
   if (sigG == "") {
@@ -87,14 +100,9 @@ function someFunction(red, green, redsig, greensig, fusion) {
     inequalityF = 1;
   }
   sigValues = [sigR, sigG, sigF];
-  console.log(sigValues);
-  console.log(inequalityR);
-  console.log(inequalityG);
-  console.log(sigRo);
-  console.log(sigGo);
 
   //create an array from input variables for signals separated by ~ or -
-  //console.log(probeR);
+
   let sigR_arr = sigR.split(/[~-]+/);
   let sigG_arr = sigG.split(/[~-]+/);
   let sigF_arr = sigF.split(/[~-]+/);
@@ -111,9 +119,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
   let sigF_array = sigF_arr.map(function (x) {
     return parseInt(x);
   });
-  /*  console.log(sigR_array);
-  console.log(sigG_array);
-  console.log(sigF_array); */
+
 
   //set low and high signals depending on whether single integer or range
   sigR_low = sigR_array[0] + sigF_array[0];
@@ -133,8 +139,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
     //both R and F have signal range
     sigR_high = sigR_array[1] + sigF_array[1];
   }
-  /* console.log(sigR_low);
-    console.log(sigR_high); */
 
   if (isNaN(sigG_array[1]) && isNaN(sigF_array[1])) {
     sigG_high = 0;
@@ -145,15 +149,13 @@ function someFunction(red, green, redsig, greensig, fusion) {
   } else {
     sigG_high = sigG_array[1] + sigF_array[1];
   }
-  /*  console.log(sigG_low);
-  console.log(sigG_high); */
+
 
   if (isNaN(sigF_array[1])) {
     sigF_high = 0;
   } else {
     sigF_high = sigF_array[1];
   }
-  //console.log(sigF_high);
 
   //set total number of signals as single number or range to write for R, G, and F (RSIG etc. in shell script)
 
@@ -165,8 +167,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else if (inequalityR == 1 || inequalityF == 1) {
       sigR_write = ">" + sigR_low;
       //inequalityR = 0;
-      /* } else if (inequalityF != 0){
-      sigR_write = ">C" + sigR_low; */
     } else {
       sigR_write = sigR_low;
     }
@@ -184,8 +184,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
       sigG_write = ">" + (sigG_low - 1);
     } else if (inequalityG == 1 || inequalityF == 1) {
       sigG_write = ">" + sigG_low;
-      /* } else if (inequalityF != 0){
-      sigG_write = ">G" + sigG_low; */
     } else {
       sigG_write = sigG_low;
     }
@@ -199,14 +197,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
     }
   }
 
-  /*   if (sigF_high == 0) {
-    if (inequalityF > 0){
-      sigF_write = sigFo;
-    }
-    sigF_write = sigF_low;
-  } else {
-    sigF_write = sigF_low + "~" + sigF_high;
-  } */
 
   if (sigF_high == 0) {
     //to handle when > or >= or => used
@@ -216,8 +206,7 @@ function someFunction(red, green, redsig, greensig, fusion) {
     } else if (inequalityF == 1) {
       sigF_write = ">" + sigF_low;
       //inequalityR = 0;
-      /* } else if (inequalityF != 0){
-          sigR_write = ">C" + sigR_low; */
+
     } else {
       sigF_write = sigF_low;
     }
@@ -237,14 +226,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
   sig_Array.sort(function (a, b) {
     return a - b;
   });
-  console.log(sig_Array);
-  console.log(
-    sigR_array[0],
-    sigR_array[1],
-    sig_Array[0],
-    sig_Array[1],
-    sig_Array[2]
-  );
 
   if (sigRo == sigGo) {
     if (inequalityR != 2) {
@@ -267,7 +248,6 @@ function someFunction(red, green, redsig, greensig, fusion) {
       }
     }
   }
-  console.log(sigTR);
   //reset inequality indicators for next iteration
   inequalityR = 0;
   inequalityG = 0;
@@ -322,8 +302,7 @@ function breakapart_GR() {
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         }
-        /*    document.getElementById("ISCN").innerHTML="(" + probeName + "x" + sigR_write 
-           + ")(" + probeG.fontcolor("green") + " con " + probeR.fontcolor("red") + "x0)"; } */
+       
     } else {
         if (sigF_high != 0) {
             const node = document.createTextNode("(" + probeG + "x" + sigG_write
@@ -331,8 +310,6 @@ function breakapart_GR() {
             const element = document.getElementById("ISCN");
             element.appendChild(node);
         } else {
-            /* document.getElementById("ISCN").innerHTML="(" + probeG.fontcolor("green") + "x" +sigG_write 
-            + "," + probeR.fontcolor("red") + "x" + sigR_write + ")(" + probeG.fontcolor("green") + " sep " + probeR.fontcolor("red") + "x" + sigTR + ")" ; */
             const node = document.createTextNode("(" + probeG + "x" + sigG_write
                 + "," + probeR + "x" + sigR_write + ")(" + probeG + " con " + probeR + "x" + sigF_write + ")");
             const element = document.getElementById("ISCN");
@@ -418,6 +395,19 @@ function dualFusion_GR() {
     }
 }
 
+function checkColor(){
+  if (red_probes.includes(probeG) && green_probes.includes(probeR)){
+    alert("Probe colors are reversed");
+  } else  if (red_probes.includes(probeG)){
+    alert(probeG + " is a RED signal.");
+  } else  if (green_probes.includes(probeR)){
+    alert(probeR + " is a GREEN signal.");
+  } else{
+    true;
+  } 
+}
+
+
 //create global variables for signal counts to be used for ordering patterns
 let num1 = parseInt(sessionStorage.getItem("num1"));
 let num2 = parseInt(sessionStorage.getItem("num2"));
@@ -425,13 +415,11 @@ let num3 = parseInt(sessionStorage.getItem("num3"));
 let node1 = document.createTextNode("/");
 let node2 = document.createTextNode("/");
   function doEverythingBA_RG(){
-   
     const nuclei1 = document.createTextNode("[" + sessionStorage.getItem("num1") + "/" + sessionStorage.getItem("denom1") + "]");
     const element1 = document.getElementById("ISCN");
     let pattern1_write = function (){someFunction(0,1,2,3,4);
     breakapart_RG();
     element1.appendChild(nuclei1);
-   // sigTR = 100;
   }
 
    let pattern2_write = function (){ someFunction(0,1,5,6,7);
@@ -439,7 +427,6 @@ let node2 = document.createTextNode("/");
     const element2 = document.getElementById("ISCN");
     breakapart_RG();
     element2.appendChild(nuclei2);
-   // sigTR =200;
     }
 
     let pattern3_write = function (){
@@ -448,7 +435,6 @@ let node2 = document.createTextNode("/");
     const element3 = document.getElementById("ISCN");
     breakapart_RG();
     element3.appendChild(nuclei3);
-   // sigTR = 300;
     }
 
     let counts = [{"count":num1, "run": pattern1_write},
@@ -456,22 +442,18 @@ let node2 = document.createTextNode("/");
     {"count":num3, "run": pattern3_write}]
     
     let sorted = counts.sort((a,b) => b.count - a.count);
-   // console.log(sorted);
-    
+
     sorted[0].run.call();
-    //console.log("first pattern written");
+    checkColor();
     if (sorted[1].count > 0){
         document.getElementById("ISCN").appendChild(node1);
         sorted[1].run.call();
-       // console.log("second pattern written");
     }
     if (sorted[2].count > 0){
         document.getElementById("ISCN").appendChild(node2);
         sorted[2].run.call();
-       // console.log("third pattern written");
     }
 }
-//console.log(typeof(num1));
 
 
 function doEverythingBA_GR(){
@@ -502,9 +484,9 @@ function doEverythingBA_GR(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-   // console.log(sorted);
 
     sorted[0].run.call();
+    checkColor();
     if (sorted[1].count > 0){
         document.getElementById("ISCN").appendChild(node1);
         sorted[1].run.call();
@@ -541,9 +523,9 @@ function doEverythingDualFusion_RG(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-   // console.log(sorted);
 
     sorted[0].run.call();
+    checkColor();
     if (sorted[1].count > 0){
         document.getElementById("ISCN").appendChild(node1);
         sorted[1].run.call();
@@ -578,9 +560,9 @@ function doEverythingDualFusion_GR(){
     {"count":num3, "run": pattern3_write}]
 
     let sorted = counts.sort((a,b) => b.count - a.count);
-   // console.log(sorted);
 
     sorted[0].run.call();
+    checkColor();
     if (sorted[1].count > 0){
         document.getElementById("ISCN").appendChild(node1);
         sorted[1].run.call();
@@ -594,9 +576,10 @@ function doEverythingDualFusion_GR(){
 
 function submit() {
     window.location.reload();
+    
 }
 
-function reload() {                          //clears all of the form fields (but the data persists until overwritten)
+function reload() {   //clears all of the form fields (but the data persists until overwritten)
     document.getElementById("Input").reset();
     document.getElementById("ISCN").innerHTML = "";
 }
@@ -608,6 +591,6 @@ function copyToClipboard() {
     console.log('Text copied');
 }
 /* 
-if (!navigator.clipboard){
+if (!navigator.clipboard){  //uncomment to test if clipboard permissions are allowed should copy to clipboard button not work
   alert("clipboard feature not working")
 } */
